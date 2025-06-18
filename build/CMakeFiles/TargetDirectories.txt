@@ -1,0 +1,16 @@
+/home/dingo/Programming/CorePulse/build/CMakeFiles/corepulse.dir
+/home/dingo/Programming/CorePulse/build/CMakeFiles/test.dir
+/home/dingo/Programming/CorePulse/build/CMakeFiles/edit_cache.dir
+/home/dingo/Programming/CorePulse/build/CMakeFiles/rebuild_cache.dir
+/home/dingo/Programming/CorePulse/build/CMakeFiles/list_install_components.dir
+/home/dingo/Programming/CorePulse/build/CMakeFiles/install.dir
+/home/dingo/Programming/CorePulse/build/CMakeFiles/install/local.dir
+/home/dingo/Programming/CorePulse/build/CMakeFiles/install/strip.dir
+/home/dingo/Programming/CorePulse/build/tests/CMakeFiles/corepulse_tests.dir
+/home/dingo/Programming/CorePulse/build/tests/CMakeFiles/test.dir
+/home/dingo/Programming/CorePulse/build/tests/CMakeFiles/edit_cache.dir
+/home/dingo/Programming/CorePulse/build/tests/CMakeFiles/rebuild_cache.dir
+/home/dingo/Programming/CorePulse/build/tests/CMakeFiles/list_install_components.dir
+/home/dingo/Programming/CorePulse/build/tests/CMakeFiles/install.dir
+/home/dingo/Programming/CorePulse/build/tests/CMakeFiles/install/local.dir
+/home/dingo/Programming/CorePulse/build/tests/CMakeFiles/install/strip.dir
