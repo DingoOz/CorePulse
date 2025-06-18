@@ -1,0 +1,21 @@
+{
+  "name": "corepulse",
+  "version": "0.1.0",
+  "description": "Open source mech combat game",
+  "dependencies": [
+    {
+      "name": "sdl2",
+      "features": ["mixer"]
+    },
+    "opengl",
+    "glew",
+    "glm",
+    "nlohmann-json",
+    {
+      "name": "gtest",
+      "$comment": "For unit testing"
+    }
+  ],
+  "builtin-baseline": "2024-12-01",
+  "overrides": []
+}
