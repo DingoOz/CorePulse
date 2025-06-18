@@ -40,6 +40,8 @@ bool CorePulseApp::on_initialize() {
     audio_manager_->load_audio_clip("assets/audio/bounce.wav", "bounce");
     audio_manager_->load_audio_clip("assets/audio/collision_metal.wav", "collision_metal");
     audio_manager_->load_audio_clip("assets/audio/collision_soft.wav", "collision_soft");
+    audio_manager_->load_audio_clip("assets/audio/ambient_hum.wav", "ambient_hum");
+    audio_manager_->load_audio_clip("assets/audio/ambient_wind.wav", "ambient_wind");
     
     // Initialize camera
     camera_ = std::make_shared<Camera>();
@@ -498,8 +500,27 @@ void CorePulseApp::create_demo_entities() {
     if (render_system_) render_system_->entities.insert(plane_entity);
     if (physics_system_) physics_system_->entities.insert(plane_entity);
     
-    std::cout << "Created " << demo_entities_.size() << " physics demo entities" << std::endl;
+    // Add ambient audio entity
+    Entity ambient_entity = world_->create_entity();
+    world_->add_component(ambient_entity, Transform{glm::vec3(0.0f, 0.0f, 0.0f)});
+    
+    AmbientAudioComponent ambient_audio;
+    ambient_audio.clip_name = "ambient_hum";
+    ambient_audio.volume = 0.2f;
+    ambient_audio.auto_start = true;
+    ambient_audio.fade_distance = 30.0f;
+    ambient_audio.max_distance = 50.0f;
+    world_->add_component(ambient_entity, ambient_audio);
+    
+    world_->add_component(ambient_entity, Tag{"Ambient Audio"});
+    demo_entities_.push_back(ambient_entity);
+    
+    // Register ambient entity with audio system
+    if (audio_system_) audio_system_->entities.insert(ambient_entity);
+    
+    std::cout << "Created " << demo_entities_.size() << " demo entities (including ambient audio)" << std::endl;
     std::cout << "Watch the red sphere fall and bounce on the blue platform!" << std::endl;
+    std::cout << "Listen for velocity-based collision sounds and ambient background audio!" << std::endl;
 }
 
 void CorePulseApp::spawn_random_entity() {
