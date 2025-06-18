@@ -8,6 +8,10 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/dingo/Programming/CorePulse/src/Application.cpp" "CMakeFiles/corepulse.dir/src/Application.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Application.cpp.o.d"
+  "/home/dingo/Programming/CorePulse/src/CorePulseApp.cpp" "CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.o.d"
+  "/home/dingo/Programming/CorePulse/src/Input.cpp" "CMakeFiles/corepulse.dir/src/Input.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Input.cpp.o.d"
+  "/home/dingo/Programming/CorePulse/src/Window.cpp" "CMakeFiles/corepulse.dir/src/Window.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Window.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/main.cpp" "CMakeFiles/corepulse.dir/src/main.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/main.cpp.o.d"
   )
 

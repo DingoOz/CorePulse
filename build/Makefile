@@ -197,6 +197,102 @@ corepulse_tests/fast:
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/corepulse_tests.dir/build.make tests/CMakeFiles/corepulse_tests.dir/build
 .PHONY : corepulse_tests/fast
 
+src/Application.o: src/Application.cpp.o
+.PHONY : src/Application.o
+
+# target to build an object file
+src/Application.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Application.cpp.o
+.PHONY : src/Application.cpp.o
+
+src/Application.i: src/Application.cpp.i
+.PHONY : src/Application.i
+
+# target to preprocess a source file
+src/Application.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Application.cpp.i
+.PHONY : src/Application.cpp.i
+
+src/Application.s: src/Application.cpp.s
+.PHONY : src/Application.s
+
+# target to generate assembly for a file
+src/Application.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Application.cpp.s
+.PHONY : src/Application.cpp.s
+
+src/CorePulseApp.o: src/CorePulseApp.cpp.o
+.PHONY : src/CorePulseApp.o
+
+# target to build an object file
+src/CorePulseApp.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.o
+.PHONY : src/CorePulseApp.cpp.o
+
+src/CorePulseApp.i: src/CorePulseApp.cpp.i
+.PHONY : src/CorePulseApp.i
+
+# target to preprocess a source file
+src/CorePulseApp.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.i
+.PHONY : src/CorePulseApp.cpp.i
+
+src/CorePulseApp.s: src/CorePulseApp.cpp.s
+.PHONY : src/CorePulseApp.s
+
+# target to generate assembly for a file
+src/CorePulseApp.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.s
+.PHONY : src/CorePulseApp.cpp.s
+
+src/Input.o: src/Input.cpp.o
+.PHONY : src/Input.o
+
+# target to build an object file
+src/Input.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Input.cpp.o
+.PHONY : src/Input.cpp.o
+
+src/Input.i: src/Input.cpp.i
+.PHONY : src/Input.i
+
+# target to preprocess a source file
+src/Input.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Input.cpp.i
+.PHONY : src/Input.cpp.i
+
+src/Input.s: src/Input.cpp.s
+.PHONY : src/Input.s
+
+# target to generate assembly for a file
+src/Input.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Input.cpp.s
+.PHONY : src/Input.cpp.s
+
+src/Window.o: src/Window.cpp.o
+.PHONY : src/Window.o
+
+# target to build an object file
+src/Window.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Window.cpp.o
+.PHONY : src/Window.cpp.o
+
+src/Window.i: src/Window.cpp.i
+.PHONY : src/Window.i
+
+# target to preprocess a source file
+src/Window.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Window.cpp.i
+.PHONY : src/Window.cpp.i
+
+src/Window.s: src/Window.cpp.s
+.PHONY : src/Window.s
+
+# target to generate assembly for a file
+src/Window.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Window.cpp.s
+.PHONY : src/Window.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -236,6 +332,18 @@ help:
 	@echo "... test"
 	@echo "... corepulse"
 	@echo "... corepulse_tests"
+	@echo "... src/Application.o"
+	@echo "... src/Application.i"
+	@echo "... src/Application.s"
+	@echo "... src/CorePulseApp.o"
+	@echo "... src/CorePulseApp.i"
+	@echo "... src/CorePulseApp.s"
+	@echo "... src/Input.o"
+	@echo "... src/Input.i"
+	@echo "... src/Input.s"
+	@echo "... src/Window.o"
+	@echo "... src/Window.i"
+	@echo "... src/Window.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
