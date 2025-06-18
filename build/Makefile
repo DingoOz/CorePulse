@@ -221,6 +221,54 @@ src/Application.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Application.cpp.s
 .PHONY : src/Application.cpp.s
 
+src/AudioManager.o: src/AudioManager.cpp.o
+.PHONY : src/AudioManager.o
+
+# target to build an object file
+src/AudioManager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/AudioManager.cpp.o
+.PHONY : src/AudioManager.cpp.o
+
+src/AudioManager.i: src/AudioManager.cpp.i
+.PHONY : src/AudioManager.i
+
+# target to preprocess a source file
+src/AudioManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/AudioManager.cpp.i
+.PHONY : src/AudioManager.cpp.i
+
+src/AudioManager.s: src/AudioManager.cpp.s
+.PHONY : src/AudioManager.s
+
+# target to generate assembly for a file
+src/AudioManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/AudioManager.cpp.s
+.PHONY : src/AudioManager.cpp.s
+
+src/AudioSystem.o: src/AudioSystem.cpp.o
+.PHONY : src/AudioSystem.o
+
+# target to build an object file
+src/AudioSystem.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o
+.PHONY : src/AudioSystem.cpp.o
+
+src/AudioSystem.i: src/AudioSystem.cpp.i
+.PHONY : src/AudioSystem.i
+
+# target to preprocess a source file
+src/AudioSystem.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/AudioSystem.cpp.i
+.PHONY : src/AudioSystem.cpp.i
+
+src/AudioSystem.s: src/AudioSystem.cpp.s
+.PHONY : src/AudioSystem.s
+
+# target to generate assembly for a file
+src/AudioSystem.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/AudioSystem.cpp.s
+.PHONY : src/AudioSystem.cpp.s
+
 src/Camera.o: src/Camera.cpp.o
 .PHONY : src/Camera.o
 
@@ -503,6 +551,12 @@ help:
 	@echo "... src/Application.o"
 	@echo "... src/Application.i"
 	@echo "... src/Application.s"
+	@echo "... src/AudioManager.o"
+	@echo "... src/AudioManager.i"
+	@echo "... src/AudioManager.s"
+	@echo "... src/AudioSystem.o"
+	@echo "... src/AudioSystem.i"
+	@echo "... src/AudioSystem.s"
 	@echo "... src/Camera.o"
 	@echo "... src/Camera.i"
 	@echo "... src/Camera.s"

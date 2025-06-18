@@ -9,6 +9,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/dingo/Programming/CorePulse/src/Application.cpp" "CMakeFiles/corepulse.dir/src/Application.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Application.cpp.o.d"
+  "/home/dingo/Programming/CorePulse/src/AudioManager.cpp" "CMakeFiles/corepulse.dir/src/AudioManager.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/AudioManager.cpp.o.d"
+  "/home/dingo/Programming/CorePulse/src/AudioSystem.cpp" "CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/Camera.cpp" "CMakeFiles/corepulse.dir/src/Camera.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Camera.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/CorePulseApp.cpp" "CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/Entity.cpp" "CMakeFiles/corepulse.dir/src/Entity.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Entity.cpp.o.d"
