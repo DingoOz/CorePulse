@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/dingo/Programming/CorePulse/include
+CXX_INCLUDES = -I/home/dingo/Programming/CorePulse/include -I/home/dingo/Programming/CorePulse/external/glm
 
 CXX_FLAGS = -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -O3 -DNDEBUG -DGTEST_HAS_PTHREAD=1
 
