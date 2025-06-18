@@ -4,6 +4,10 @@
 #include "Renderer.h"
 #include "Camera.h"
 #include "Mesh.h"
+#include "World.h"
+#include "Systems.h"
+#include "AudioManager.h"
+#include "AudioSystem.h"
 #include <sstream>
 #include <memory>
 
@@ -30,18 +34,36 @@ protected:
     void on_window_resized(int width, int height) override;
 
 private:
-    std::unique_ptr<Renderer> renderer_;
-    std::unique_ptr<Camera> camera_;
+    // Core systems
+    std::shared_ptr<Renderer> renderer_;
+    std::shared_ptr<Camera> camera_;
+    std::unique_ptr<World> world_;
+    
+    // ECS systems
+    std::shared_ptr<RenderSystem> render_system_;
+    std::shared_ptr<MovementSystem> movement_system_;
+    std::shared_ptr<AutoRotateSystem> auto_rotate_system_;
+    std::shared_ptr<LifetimeSystem> lifetime_system_;
+    std::shared_ptr<PhysicsSystem> physics_system_;
+    std::shared_ptr<AudioSystem> audio_system_;
+    
+    // Audio system
+    std::shared_ptr<AudioManager> audio_manager_;
     
     // Test meshes
-    std::unique_ptr<Mesh> cube_mesh_;
-    std::unique_ptr<Mesh> sphere_mesh_;
-    std::unique_ptr<Mesh> plane_mesh_;
+    std::shared_ptr<Mesh> cube_mesh_;
+    std::shared_ptr<Mesh> sphere_mesh_;
+    std::shared_ptr<Mesh> plane_mesh_;
+    
+    // Demo entities
+    std::vector<Entity> demo_entities_;
+    Entity sphere_entity_ = 0; // Track the falling sphere for reset
     
     // Animation state
-    float rotation_angle_ = 0.0f;
     float camera_angle_ = 0.0f;
-    int current_mesh_ = 0; // 0=cube, 1=sphere, 2=plane
+    float camera_radius_ = 8.0f;
+    float camera_height_ = 2.0f;
+    bool auto_rotate_camera_ = true;
     
     // UI state
     bool show_info_ = true;
@@ -49,7 +71,10 @@ private:
     
     void update_window_title();
     void update_camera_position();
-    void render_scene();
+    void setup_ecs_systems();
+    void create_demo_entities();
+    void spawn_random_entity();
+    void trigger_sphere_drop();
 };
 
 } // namespace CorePulse

@@ -258,12 +258,6 @@ PKG_CONFIG_ARGN:STRING=
 //pkg-config executable
 PKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/pkg-config
 
-//The directory containing a CMake configuration file for SDL2.
-SDL2_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/SDL2
-
-//The directory containing a CMake configuration file for glm.
-glm_DIR:PATH=glm_DIR-NOTFOUND
-
 //The directory containing a CMake configuration file for nlohmann_json.
 nlohmann_json_DIR:PATH=/usr/share/cmake/nlohmann_json
 

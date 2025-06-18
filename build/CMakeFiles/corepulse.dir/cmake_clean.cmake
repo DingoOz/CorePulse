@@ -1,6 +1,10 @@
 file(REMOVE_RECURSE
   "CMakeFiles/corepulse.dir/src/Application.cpp.o"
   "CMakeFiles/corepulse.dir/src/Application.cpp.o.d"
+  "CMakeFiles/corepulse.dir/src/AudioManager.cpp.o"
+  "CMakeFiles/corepulse.dir/src/AudioManager.cpp.o.d"
+  "CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o"
+  "CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o.d"
   "CMakeFiles/corepulse.dir/src/Camera.cpp.o"
   "CMakeFiles/corepulse.dir/src/Camera.cpp.o.d"
   "CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.o"
