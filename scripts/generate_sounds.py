@@ -93,6 +93,54 @@ def generate_bounce_sound(filename, frequency=220, duration=0.2, sample_rate=441
     
     print(f"Generated {filename} ({duration:.2f}s, {frequency}Hz bounce sound)")
 
+def generate_ambient_sound(filename, frequency=100, duration=10.0, sample_rate=44100):
+    """Generate ambient background sound"""
+    t = np.linspace(0, duration, int(sample_rate * duration))
+    
+    # Create layered ambient sound with multiple sine waves
+    audio = np.zeros(len(t))
+    
+    # Base low frequency drone
+    audio += 0.3 * np.sin(2 * np.pi * frequency * t)
+    
+    # Add harmonic layers
+    audio += 0.2 * np.sin(2 * np.pi * frequency * 1.5 * t)
+    audio += 0.15 * np.sin(2 * np.pi * frequency * 2.0 * t)
+    
+    # Add some gentle modulation
+    modulation = 0.1 * np.sin(2 * np.pi * 0.5 * t)  # 0.5 Hz modulation
+    audio *= (1.0 + modulation)
+    
+    # Add subtle noise for texture
+    noise = np.random.normal(0, 0.05, len(audio))
+    audio += noise
+    
+    # Apply gentle fade in/out for seamless looping
+    fade_samples = int(sample_rate * 0.5)  # 0.5 second fade
+    fade_in = np.linspace(0, 1, fade_samples)
+    fade_out = np.linspace(1, 0, fade_samples)
+    
+    audio[:fade_samples] *= fade_in
+    audio[-fade_samples:] *= fade_out
+    
+    # Normalize
+    audio = np.clip(audio, -1.0, 1.0)
+    audio_16bit = (audio * 16383).astype(np.int16)  # Quieter ambient sounds
+    
+    # Create stereo version
+    stereo_audio = np.zeros((len(audio_16bit), 2), dtype=np.int16)
+    stereo_audio[:, 0] = audio_16bit
+    stereo_audio[:, 1] = audio_16bit
+    
+    # Write WAV file
+    with wave.open(filename, 'w') as wav_file:
+        wav_file.setnchannels(2)
+        wav_file.setsampwidth(2)
+        wav_file.setframerate(sample_rate)
+        wav_file.writeframes(stereo_audio.tobytes())
+    
+    print(f"Generated {filename} ({duration:.1f}s, {frequency}Hz ambient sound)")
+
 def main():
     # Create assets/audio directory if it doesn't exist
     audio_dir = "../assets/audio"
@@ -105,11 +153,17 @@ def main():
     generate_collision_sound(f"{audio_dir}/collision_soft.wav", frequency=300, duration=0.3)
     generate_bounce_sound(f"{audio_dir}/bounce.wav", frequency=240, duration=0.25)
     
+    # Generate ambient sounds
+    generate_ambient_sound(f"{audio_dir}/ambient_hum.wav", frequency=80, duration=5.0)
+    generate_ambient_sound(f"{audio_dir}/ambient_wind.wav", frequency=120, duration=5.0)
+    
     print("\nAudio files generated successfully!")
     print("Files created:")
     print(f"  {audio_dir}/collision_metal.wav - High-pitched metallic collision")
     print(f"  {audio_dir}/collision_soft.wav - Lower-pitched soft collision")
     print(f"  {audio_dir}/bounce.wav - Bounce/impact sound")
+    print(f"  {audio_dir}/ambient_hum.wav - Low frequency ambient hum")
+    print(f"  {audio_dir}/ambient_wind.wav - Higher frequency ambient atmosphere")
 
 if __name__ == "__main__":
     main()

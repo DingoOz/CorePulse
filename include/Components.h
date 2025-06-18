@@ -129,4 +129,15 @@ struct AudioSourceComponent {
     uint32_t audio_source_id = 0; // Internal audio system ID
 };
 
+// Ambient audio component for environmental sounds
+struct AmbientAudioComponent {
+    std::string clip_name;
+    float volume = 0.3f;
+    float fade_distance = 50.0f;  // Distance at which ambient sound starts fading
+    float max_distance = 100.0f;  // Maximum distance for ambient sound
+    bool is_playing = false;
+    bool auto_start = true;       // Start playing automatically
+    uint32_t audio_source_id = 0; // Internal audio system ID
+};
+
 } // namespace CorePulse

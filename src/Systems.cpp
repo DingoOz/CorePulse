@@ -305,13 +305,16 @@ void PhysicsSystem::resolve_collision(Entity entity1, Entity entity2) {
         return;
     }
     
+    // Calculate impact velocity for audio effects
+    glm::vec3 impact_velocity = calculate_impact_velocity(entity1, entity2);
+    
     // Trigger collision audio for entities with AudioSourceComponent
     if (audio_system_) {
         if (world_->has_component<AudioSourceComponent>(entity1)) {
-            audio_system_->trigger_collision_audio(entity1);
+            audio_system_->trigger_collision_audio_with_velocity(entity1, impact_velocity);
         }
         if (world_->has_component<AudioSourceComponent>(entity2)) {
-            audio_system_->trigger_collision_audio(entity2);
+            audio_system_->trigger_collision_audio_with_velocity(entity2, impact_velocity);
         }
     }
     
@@ -497,6 +500,27 @@ void PhysicsSystem::separate_objects(Entity entity1, Entity entity2,
     } else if (!rb2.is_kinematic) {
         transform2.position += separation;
     }
+}
+
+glm::vec3 PhysicsSystem::calculate_impact_velocity(Entity entity1, Entity entity2) const {
+    if (!world_->has_component<RigidBody>(entity1) || !world_->has_component<RigidBody>(entity2)) {
+        return glm::vec3(0.0f);
+    }
+    
+    const auto& rb1 = world_->get_component<RigidBody>(entity1);
+    const auto& rb2 = world_->get_component<RigidBody>(entity2);
+    
+    // Calculate relative velocity at impact
+    glm::vec3 relative_velocity = rb1.velocity - rb2.velocity;
+    
+    // For kinematic bodies, use just the dynamic body's velocity
+    if (rb1.is_kinematic && !rb2.is_kinematic) {
+        return rb2.velocity;
+    } else if (rb2.is_kinematic && !rb1.is_kinematic) {
+        return rb1.velocity;
+    }
+    
+    return relative_velocity;
 }
 
 } // namespace CorePulse

@@ -28,12 +28,19 @@ public:
     
     // Collision audio support
     void trigger_collision_audio(Entity entity);
+    void trigger_collision_audio_with_velocity(Entity entity, const glm::vec3& impact_velocity);
+    
+    // Ambient audio support
+    void start_ambient_audio(Entity entity);
+    void stop_ambient_audio(Entity entity);
+    void update_ambient_audio_volume(Entity entity, float distance);
     
 private:
     World* world_ = nullptr;
     std::shared_ptr<AudioManager> audio_manager_;
     
     void process_audio_sources();
+    void process_ambient_audio();
     void update_3d_positions();
 };
 
