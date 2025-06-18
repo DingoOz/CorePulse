@@ -159,6 +159,7 @@ void CorePulseApp::on_shutdown() {
     movement_system_.reset();
     auto_rotate_system_.reset();
     lifetime_system_.reset();
+    physics_system_.reset();
     
     // Clean up resources
     cube_mesh_.reset();
@@ -348,48 +349,60 @@ void CorePulseApp::setup_ecs_systems() {
     lifetime_system_ = std::make_shared<LifetimeSystem>();
     lifetime_system_->set_world(world_.get());
     lifetime_system_->init();
+    
+    physics_system_ = std::make_shared<PhysicsSystem>();
+    physics_system_->set_world(world_.get());
+    physics_system_->init();
 }
 
 void CorePulseApp::create_demo_entities() {
     if (!world_) return;
     
-    // Create a few initial demo entities
+    // Create physics demo entities
     
-    // Spinning red cube at origin
+    // Red cube with physics - will fall and bounce
     Entity cube_entity = world_->create_entity();
-    world_->add_component(cube_entity, Transform{glm::vec3(0.0f, 0.0f, 0.0f)});
+    world_->add_component(cube_entity, Transform{glm::vec3(0.0f, 5.0f, 0.0f)});  // Start in the air
     world_->add_component(cube_entity, Renderable{cube_mesh_, glm::vec3(1.0f, 0.5f, 0.5f)});
+    world_->add_component(cube_entity, RigidBody{glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, 0.1f, 0.1f, false, true});
+    world_->add_component(cube_entity, Collider{Collider::Type::Box, glm::vec3(1.0f), glm::vec3(0.0f), false});
     world_->add_component(cube_entity, AutoRotate{glm::vec3(0.0f, 1.0f, 0.0f), 45.0f});
-    world_->add_component(cube_entity, Tag{"Red Cube"});
+    world_->add_component(cube_entity, Tag{"Physics Cube"});
     demo_entities_.push_back(cube_entity);
     
     // Manually register with systems for now
     if (render_system_) render_system_->entities.insert(cube_entity);
     if (auto_rotate_system_) auto_rotate_system_->entities.insert(cube_entity);
+    if (physics_system_) physics_system_->entities.insert(cube_entity);
     
-    // Moving green sphere
+    // Green sphere with physics and initial velocity
     Entity sphere_entity = world_->create_entity();
-    world_->add_component(sphere_entity, Transform{glm::vec3(3.0f, 0.0f, 0.0f)});
+    world_->add_component(sphere_entity, Transform{glm::vec3(3.0f, 8.0f, 0.0f)});  // Start higher up
     world_->add_component(sphere_entity, Renderable{sphere_mesh_, glm::vec3(0.5f, 1.0f, 0.5f)});
-    world_->add_component(sphere_entity, Velocity{glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 90.0f)});
-    world_->add_component(sphere_entity, Tag{"Green Sphere"});
+    world_->add_component(sphere_entity, RigidBody{glm::vec3(-2.0f, 0.0f, 1.0f), glm::vec3(0.0f), 0.5f, 0.05f, 0.1f, false, true});  // Initial velocity
+    world_->add_component(sphere_entity, Collider{Collider::Type::Sphere, glm::vec3(1.0f), glm::vec3(0.0f), false});
+    world_->add_component(sphere_entity, Tag{"Physics Sphere"});
     demo_entities_.push_back(sphere_entity);
     
     // Manually register with systems for now
     if (render_system_) render_system_->entities.insert(sphere_entity);
-    if (movement_system_) movement_system_->entities.insert(sphere_entity);
+    if (physics_system_) physics_system_->entities.insert(sphere_entity);
     
-    // Static blue plane
+    // Static blue plane (kinematic, won't be affected by physics)
     Entity plane_entity = world_->create_entity();
-    world_->add_component(plane_entity, Transform{glm::vec3(-3.0f, 0.0f, 0.0f)});
+    world_->add_component(plane_entity, Transform{glm::vec3(-3.0f, 1.0f, 0.0f)});
     world_->add_component(plane_entity, Renderable{plane_mesh_, glm::vec3(0.5f, 0.5f, 1.0f)});
-    world_->add_component(plane_entity, Tag{"Blue Plane"});
+    world_->add_component(plane_entity, RigidBody{glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, 0.1f, 0.1f, true, false});  // Kinematic
+    world_->add_component(plane_entity, Collider{Collider::Type::Box, glm::vec3(2.0f, 0.1f, 2.0f), glm::vec3(0.0f), false});
+    world_->add_component(plane_entity, Tag{"Static Platform"});
     demo_entities_.push_back(plane_entity);
     
     // Manually register with systems for now
     if (render_system_) render_system_->entities.insert(plane_entity);
+    if (physics_system_) physics_system_->entities.insert(plane_entity);
     
-    std::cout << "Created " << demo_entities_.size() << " demo entities" << std::endl;
+    std::cout << "Created " << demo_entities_.size() << " physics demo entities" << std::endl;
+    std::cout << "Watch the cube and sphere fall and bounce!" << std::endl;
 }
 
 void CorePulseApp::spawn_random_entity() {

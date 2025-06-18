@@ -79,6 +79,11 @@ void World::register_core_components() {
     register_component<Tag>();
     register_component<Lifetime>();
     register_component<AutoRotate>();
+    
+    // Physics components
+    register_component<RigidBody>();
+    register_component<Collider>();
+    register_component<Ground>();
 }
 
 } // namespace CorePulse

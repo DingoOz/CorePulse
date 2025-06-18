@@ -90,4 +90,30 @@ struct AutoRotate {
     AutoRotate(const glm::vec3& ax, float sp) : axis(ax), speed(sp) {}
 };
 
+// Physics Components
+struct RigidBody {
+    glm::vec3 velocity{0.0f};
+    glm::vec3 angular_velocity{0.0f};
+    float mass = 1.0f;
+    float drag = 0.1f;
+    float angular_drag = 0.1f;
+    bool is_kinematic = false;  // If true, not affected by physics forces
+    bool use_gravity = true;
+};
+
+struct Collider {
+    enum class Type { Box, Sphere, Capsule };
+    
+    Type type = Type::Box;
+    glm::vec3 size{1.0f};  // For box: half-extents, for sphere: radius in x, for capsule: radius in x, height in y
+    glm::vec3 offset{0.0f}; // Offset from transform position
+    bool is_trigger = false; // If true, doesn't block movement but triggers events
+};
+
+struct Ground {
+    float height = 0.0f;
+    float friction = 0.8f;
+    glm::vec3 normal{0.0f, 1.0f, 0.0f};
+};
+
 } // namespace CorePulse

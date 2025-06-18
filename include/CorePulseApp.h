@@ -42,6 +42,7 @@ private:
     std::shared_ptr<MovementSystem> movement_system_;
     std::shared_ptr<AutoRotateSystem> auto_rotate_system_;
     std::shared_ptr<LifetimeSystem> lifetime_system_;
+    std::shared_ptr<PhysicsSystem> physics_system_;
     
     // Test meshes
     std::shared_ptr<Mesh> cube_mesh_;
