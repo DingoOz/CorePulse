@@ -1,0 +1,93 @@
+#pragma once
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <memory>
+#include <string>
+
+namespace CorePulse {
+
+// Forward declarations
+class Mesh;
+
+// Transform component - position, rotation, scale
+struct Transform {
+    glm::vec3 position{0.0f};
+    glm::vec3 rotation{0.0f}; // Euler angles in degrees
+    glm::vec3 scale{1.0f};
+    
+    Transform() = default;
+    Transform(const glm::vec3& pos, const glm::vec3& rot = glm::vec3(0.0f), const glm::vec3& scl = glm::vec3(1.0f))
+        : position(pos), rotation(rot), scale(scl) {}
+    
+    // Generate model matrix from transform
+    glm::mat4 get_model_matrix() const {
+        glm::mat4 model = glm::mat4(1.0f);
+        
+        // Apply transformations: scale -> rotation -> translation
+        model = glm::translate(model, position);
+        model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f)); // Yaw
+        model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f)); // Pitch
+        model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f)); // Roll
+        model = glm::scale(model, scale);
+        
+        return model;
+    }
+    
+    // Utility methods
+    void translate(const glm::vec3& delta) { position += delta; }
+    void rotate(const glm::vec3& delta) { rotation += delta; }
+    void scale_by(const glm::vec3& factor) { scale *= factor; }
+    void scale_by(float factor) { scale *= factor; }
+};
+
+// Renderable component - visual representation
+struct Renderable {
+    std::shared_ptr<Mesh> mesh;
+    glm::vec3 color{1.0f}; // RGB color multiplier
+    bool visible = true;
+    bool cast_shadows = true;
+    bool receive_shadows = true;
+    
+    Renderable() = default;
+    explicit Renderable(std::shared_ptr<Mesh> m, const glm::vec3& c = glm::vec3(1.0f))
+        : mesh(std::move(m)), color(c) {}
+};
+
+// Velocity component - physics motion
+struct Velocity {
+    glm::vec3 linear{0.0f};   // Linear velocity (units/second)
+    glm::vec3 angular{0.0f};  // Angular velocity (degrees/second)
+    
+    Velocity() = default;
+    Velocity(const glm::vec3& lin, const glm::vec3& ang = glm::vec3(0.0f))
+        : linear(lin), angular(ang) {}
+};
+
+// Tag component - simple identifier
+struct Tag {
+    std::string name;
+    
+    Tag() = default;
+    explicit Tag(const std::string& n) : name(n) {}
+    explicit Tag(const char* n) : name(n) {}
+};
+
+// Lifetime component - entities that should be destroyed after a time
+struct Lifetime {
+    float remaining_time; // Seconds
+    
+    Lifetime() = default;
+    explicit Lifetime(float time) : remaining_time(time) {}
+};
+
+// Rotation component - auto-rotation behavior
+struct AutoRotate {
+    glm::vec3 axis{0.0f, 1.0f, 0.0f}; // Rotation axis
+    float speed = 45.0f; // Degrees per second
+    
+    AutoRotate() = default;
+    AutoRotate(const glm::vec3& ax, float sp) : axis(ax), speed(sp) {}
+};
+
+} // namespace CorePulse
