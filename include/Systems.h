@@ -75,6 +75,9 @@ private:
     std::vector<Entity> entities_to_destroy_;
 };
 
+// Forward declaration
+class AudioSystem;
+
 // Physics system - handles rigid body physics and collision detection
 class PhysicsSystem : public System {
 public:
@@ -85,11 +88,13 @@ public:
     void shutdown() override;
     
     void set_world(World* world) { world_ = world; }
+    void set_audio_system(AudioSystem* audio_system) { audio_system_ = audio_system; }
     void set_gravity(const glm::vec3& gravity) { gravity_ = gravity; }
     glm::vec3 get_gravity() const { return gravity_; }
     
 private:
     World* world_ = nullptr;
+    AudioSystem* audio_system_ = nullptr;
     glm::vec3 gravity_{0.0f, -9.81f, 0.0f}; // Standard Earth gravity
     
     void apply_gravity(Entity entity, RigidBody& rb, float delta_time);

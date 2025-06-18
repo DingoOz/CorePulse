@@ -116,4 +116,17 @@ struct Ground {
     glm::vec3 normal{0.0f, 1.0f, 0.0f};
 };
 
+// Audio components
+struct AudioSourceComponent {
+    std::string clip_name;
+    float volume = 1.0f;
+    float pitch = 1.0f;
+    float max_distance = 100.0f;
+    bool is_3d = true;
+    bool is_looping = false;
+    bool play_on_start = false;
+    bool play_on_collision = false;
+    uint32_t audio_source_id = 0; // Internal audio system ID
+};
+
 } // namespace CorePulse

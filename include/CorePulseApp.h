@@ -6,6 +6,8 @@
 #include "Mesh.h"
 #include "World.h"
 #include "Systems.h"
+#include "AudioManager.h"
+#include "AudioSystem.h"
 #include <sstream>
 #include <memory>
 
@@ -43,6 +45,10 @@ private:
     std::shared_ptr<AutoRotateSystem> auto_rotate_system_;
     std::shared_ptr<LifetimeSystem> lifetime_system_;
     std::shared_ptr<PhysicsSystem> physics_system_;
+    std::shared_ptr<AudioSystem> audio_system_;
+    
+    // Audio system
+    std::shared_ptr<AudioManager> audio_manager_;
     
     // Test meshes
     std::shared_ptr<Mesh> cube_mesh_;
@@ -51,10 +57,13 @@ private:
     
     // Demo entities
     std::vector<Entity> demo_entities_;
+    Entity sphere_entity_ = 0; // Track the falling sphere for reset
     
     // Animation state
     float camera_angle_ = 0.0f;
     float camera_radius_ = 8.0f;
+    float camera_height_ = 2.0f;
+    bool auto_rotate_camera_ = true;
     
     // UI state
     bool show_info_ = true;
@@ -65,6 +74,7 @@ private:
     void setup_ecs_systems();
     void create_demo_entities();
     void spawn_random_entity();
+    void trigger_sphere_drop();
 };
 
 } // namespace CorePulse

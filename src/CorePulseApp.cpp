@@ -28,6 +28,19 @@ bool CorePulseApp::on_initialize() {
         return false;
     }
     
+    // Initialize audio system
+    audio_manager_ = std::make_shared<AudioManager>();
+    if (!audio_manager_->initialize()) {
+        std::cerr << "Failed to initialize audio system\n";
+        return false;
+    }
+    
+    // Load audio files
+    std::cout << "Loading audio assets...\n";
+    audio_manager_->load_audio_clip("assets/audio/bounce.wav", "bounce");
+    audio_manager_->load_audio_clip("assets/audio/collision_metal.wav", "collision_metal");
+    audio_manager_->load_audio_clip("assets/audio/collision_soft.wav", "collision_soft");
+    
     // Initialize camera
     camera_ = std::make_shared<Camera>();
     camera_->set_position(glm::vec3(0.0f, 2.0f, 8.0f));
@@ -69,18 +82,23 @@ bool CorePulseApp::on_initialize() {
     std::cout << "  F11 - Toggle Fullscreen\n";
     std::cout << "  I   - Toggle Info Display\n";
     std::cout << "  W   - Toggle Wireframe Mode\n";
-    std::cout << "  SPACE - Test\n";
+    std::cout << "  SPACE - Drop sphere (reset physics demo)\n";
     std::cout << "  Mouse wheel - Zoom in/out (radius: 2-20)\n";
-    std::cout << "  Arrow keys - Move camera\n";
+    std::cout << "  Arrow keys - Rotate camera around scene\n";
+    std::cout << "  A/D - Rotate camera left/right manually\n";
+    std::cout << "  Q/E - Move camera up/down\n";
+    std::cout << "  P - Pause/resume auto camera rotation\n";
     
     return true;
 }
 
 void CorePulseApp::on_update(float delta_time) {
-    // Update camera rotation
-    camera_angle_ += 45.0f * delta_time; // Rotation for testing
-    if (camera_angle_ > 360.0f) {
-        camera_angle_ -= 360.0f;
+    // Update camera rotation (only if auto rotation is enabled)
+    if (auto_rotate_camera_) {
+        camera_angle_ += 45.0f * delta_time; // Rotation for testing
+        if (camera_angle_ > 360.0f) {
+            camera_angle_ -= 360.0f;
+        }
     }
     
     update_camera_position();
@@ -88,6 +106,24 @@ void CorePulseApp::on_update(float delta_time) {
     // Update ECS World
     if (world_) {
         world_->update(delta_time);
+    }
+    
+    // Manually update physics system since it's not registered with SystemManager yet
+    if (physics_system_) {
+        physics_system_->update(delta_time);
+    }
+    
+    // Update audio system
+    if (audio_system_) {
+        // Update listener position to follow camera
+        if (camera_) {
+            glm::vec3 cam_pos = camera_->get_position();
+            glm::vec3 cam_forward = glm::normalize(camera_->get_target() - cam_pos);
+            glm::vec3 cam_up = glm::vec3(0.0f, 1.0f, 0.0f);
+            audio_system_->set_listener_to_camera(cam_pos, cam_forward, cam_up);
+        }
+        
+        audio_system_->update(delta_time);
     }
     
     // Update window title with FPS info
@@ -161,6 +197,13 @@ void CorePulseApp::on_shutdown() {
     auto_rotate_system_.reset();
     lifetime_system_.reset();
     physics_system_.reset();
+    audio_system_.reset();
+    
+    // Clean up audio
+    if (audio_manager_) {
+        audio_manager_->shutdown();
+        audio_manager_.reset();
+    }
     
     // Clean up resources
     cube_mesh_.reset();
@@ -193,7 +236,7 @@ void CorePulseApp::on_key_pressed(SDL_Scancode key) {
             break;
             
         case SDL_SCANCODE_SPACE:
-            spawn_random_entity();
+            trigger_sphere_drop();
             break;
             
         case SDL_SCANCODE_C:
@@ -208,27 +251,67 @@ void CorePulseApp::on_key_pressed(SDL_Scancode key) {
             break;
             
         case SDL_SCANCODE_UP:
-            if (camera_) {
-                camera_->move_forward(0.5f);
-            }
+            // Rotate camera up (decrease angle)
+            camera_angle_ -= 10.0f;
+            if (camera_angle_ < 0.0f) camera_angle_ += 360.0f;
+            std::cout << "Camera angle: " << camera_angle_ << std::endl;
             break;
             
         case SDL_SCANCODE_DOWN:
-            if (camera_) {
-                camera_->move_backward(0.5f);
-            }
+            // Rotate camera down (increase angle)
+            camera_angle_ += 10.0f;
+            if (camera_angle_ >= 360.0f) camera_angle_ -= 360.0f;
+            std::cout << "Camera angle: " << camera_angle_ << std::endl;
             break;
             
         case SDL_SCANCODE_LEFT:
-            if (camera_) {
-                camera_->move_left(0.5f);
-            }
+            // Rotate camera left
+            camera_angle_ -= 10.0f;
+            if (camera_angle_ < 0.0f) camera_angle_ += 360.0f;
+            std::cout << "Camera angle: " << camera_angle_ << std::endl;
             break;
             
         case SDL_SCANCODE_RIGHT:
-            if (camera_) {
-                camera_->move_right(0.5f);
-            }
+            // Rotate camera right
+            camera_angle_ += 10.0f;
+            if (camera_angle_ >= 360.0f) camera_angle_ -= 360.0f;
+            std::cout << "Camera angle: " << camera_angle_ << std::endl;
+            break;
+            
+        case SDL_SCANCODE_A:
+            // Manual rotate left
+            camera_angle_ -= 5.0f;
+            if (camera_angle_ < 0.0f) camera_angle_ += 360.0f;
+            auto_rotate_camera_ = false; // Stop auto rotation when manually controlling
+            std::cout << "Manual camera angle: " << camera_angle_ << std::endl;
+            break;
+            
+        case SDL_SCANCODE_D:
+            // Manual rotate right
+            camera_angle_ += 5.0f;
+            if (camera_angle_ >= 360.0f) camera_angle_ -= 360.0f;
+            auto_rotate_camera_ = false; // Stop auto rotation when manually controlling
+            std::cout << "Manual camera angle: " << camera_angle_ << std::endl;
+            break;
+            
+        case SDL_SCANCODE_Q:
+            // Move camera up
+            camera_height_ += 0.5f;
+            camera_height_ = std::min(camera_height_, 15.0f); // Max height
+            std::cout << "Camera height: " << camera_height_ << std::endl;
+            break;
+            
+        case SDL_SCANCODE_E:
+            // Move camera down
+            camera_height_ -= 0.5f;
+            camera_height_ = std::max(camera_height_, 0.5f); // Min height
+            std::cout << "Camera height: " << camera_height_ << std::endl;
+            break;
+            
+        case SDL_SCANCODE_P:
+            // Toggle auto rotation
+            auto_rotate_camera_ = !auto_rotate_camera_;
+            std::cout << "Auto camera rotation: " << (auto_rotate_camera_ ? "ON" : "OFF") << std::endl;
             break;
             
         default:
@@ -313,10 +396,11 @@ void CorePulseApp::update_camera_position() {
     float x = camera_radius_ * cos(glm::radians(camera_angle_));
     float z = camera_radius_ * sin(glm::radians(camera_angle_));
     
-    // Keep camera height proportional to radius for better viewing angle
-    float camera_height = std::max(2.0f, camera_radius_ * 0.3f);
+    // Use manual camera height if not auto-rotating, otherwise use proportional height
+    float final_height = auto_rotate_camera_ ? 
+        std::max(2.0f, camera_radius_ * 0.3f) : camera_height_;
     
-    camera_->set_position(glm::vec3(x, camera_height, z));
+    camera_->set_position(glm::vec3(x, final_height, z));
     camera_->look_at(glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
@@ -363,48 +447,51 @@ void CorePulseApp::setup_ecs_systems() {
     physics_system_ = std::make_shared<PhysicsSystem>();
     physics_system_->set_world(world_.get());
     physics_system_->init();
+    
+    audio_system_ = std::make_shared<AudioSystem>(audio_manager_);
+    audio_system_->set_world(world_.get());
+    audio_system_->init();
+    
+    // Connect physics system to audio system for collision sounds
+    physics_system_->set_audio_system(audio_system_.get());
 }
 
 void CorePulseApp::create_demo_entities() {
     if (!world_) return;
     
-    // Create physics demo entities
+    // Create physics demo entities - simple sphere falling onto a plane
     
-    // Red cube with physics - will fall and bounce
-    Entity cube_entity = world_->create_entity();
-    world_->add_component(cube_entity, Transform{glm::vec3(0.0f, 5.0f, 0.0f)});  // Start in the air
-    world_->add_component(cube_entity, Renderable{cube_mesh_, glm::vec3(1.0f, 0.5f, 0.5f)});
-    world_->add_component(cube_entity, RigidBody{glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, 0.1f, 0.1f, false, true});
-    world_->add_component(cube_entity, Collider{Collider::Type::Box, glm::vec3(1.0f), glm::vec3(0.0f), false});
-    world_->add_component(cube_entity, AutoRotate{glm::vec3(0.0f, 1.0f, 0.0f), 45.0f});
-    world_->add_component(cube_entity, Tag{"Physics Cube"});
-    demo_entities_.push_back(cube_entity);
+    // Red sphere with physics - will fall and bounce on the plane
+    sphere_entity_ = world_->create_entity();
+    world_->add_component(sphere_entity_, Transform{glm::vec3(0.0f, 6.0f, 0.0f)});  // Start high above the plane
+    world_->add_component(sphere_entity_, Renderable{sphere_mesh_, glm::vec3(1.0f, 0.3f, 0.3f)});  // Bright red
+    world_->add_component(sphere_entity_, RigidBody{glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, 0.1f, 0.1f, false, true});  // No initial velocity
+    world_->add_component(sphere_entity_, Collider{Collider::Type::Sphere, glm::vec3(1.0f), glm::vec3(0.0f), false});
     
-    // Manually register with systems for now
-    if (render_system_) render_system_->entities.insert(cube_entity);
-    if (auto_rotate_system_) auto_rotate_system_->entities.insert(cube_entity);
-    if (physics_system_) physics_system_->entities.insert(cube_entity);
+    // Add audio source component for collision sounds
+    AudioSourceComponent bounce_audio;
+    bounce_audio.clip_name = "bounce";
+    bounce_audio.volume = 0.8f;
+    bounce_audio.is_3d = true;
+    bounce_audio.play_on_collision = true;
+    bounce_audio.max_distance = 20.0f;
+    world_->add_component(sphere_entity_, bounce_audio);
     
-    // Green sphere with physics and initial velocity
-    Entity sphere_entity = world_->create_entity();
-    world_->add_component(sphere_entity, Transform{glm::vec3(3.0f, 8.0f, 0.0f)});  // Start higher up
-    world_->add_component(sphere_entity, Renderable{sphere_mesh_, glm::vec3(0.5f, 1.0f, 0.5f)});
-    world_->add_component(sphere_entity, RigidBody{glm::vec3(-2.0f, 0.0f, 1.0f), glm::vec3(0.0f), 0.5f, 0.05f, 0.1f, false, true});  // Initial velocity
-    world_->add_component(sphere_entity, Collider{Collider::Type::Sphere, glm::vec3(1.0f), glm::vec3(0.0f), false});
-    world_->add_component(sphere_entity, Tag{"Physics Sphere"});
-    demo_entities_.push_back(sphere_entity);
+    world_->add_component(sphere_entity_, Tag{"Falling Sphere"});
+    demo_entities_.push_back(sphere_entity_);
     
     // Manually register with systems for now
-    if (render_system_) render_system_->entities.insert(sphere_entity);
-    if (physics_system_) physics_system_->entities.insert(sphere_entity);
+    if (render_system_) render_system_->entities.insert(sphere_entity_);
+    if (physics_system_) physics_system_->entities.insert(sphere_entity_);
+    if (audio_system_) audio_system_->entities.insert(sphere_entity_);
     
-    // Static blue plane (kinematic, won't be affected by physics)
+    // Large static blue plane (kinematic, won't be affected by physics)
     Entity plane_entity = world_->create_entity();
-    world_->add_component(plane_entity, Transform{glm::vec3(-3.0f, 1.0f, 0.0f)});
-    world_->add_component(plane_entity, Renderable{plane_mesh_, glm::vec3(0.5f, 0.5f, 1.0f)});
+    world_->add_component(plane_entity, Transform{glm::vec3(0.0f, 0.5f, 0.0f)});  // Position at y=0.5 to be above ground
+    world_->add_component(plane_entity, Renderable{plane_mesh_, glm::vec3(0.3f, 0.3f, 1.0f)});  // Bright blue
     world_->add_component(plane_entity, RigidBody{glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, 0.1f, 0.1f, true, false});  // Kinematic
-    world_->add_component(plane_entity, Collider{Collider::Type::Box, glm::vec3(2.0f, 0.1f, 2.0f), glm::vec3(0.0f), false});
-    world_->add_component(plane_entity, Tag{"Static Platform"});
+    world_->add_component(plane_entity, Collider{Collider::Type::Box, glm::vec3(4.0f, 0.2f, 4.0f), glm::vec3(0.0f), false});  // Large flat platform
+    world_->add_component(plane_entity, Tag{"Landing Platform"});
     demo_entities_.push_back(plane_entity);
     
     // Manually register with systems for now
@@ -412,7 +499,7 @@ void CorePulseApp::create_demo_entities() {
     if (physics_system_) physics_system_->entities.insert(plane_entity);
     
     std::cout << "Created " << demo_entities_.size() << " physics demo entities" << std::endl;
-    std::cout << "Watch the cube and sphere fall and bounce!" << std::endl;
+    std::cout << "Watch the red sphere fall and bounce on the blue platform!" << std::endl;
 }
 
 void CorePulseApp::spawn_random_entity() {
@@ -452,6 +539,27 @@ void CorePulseApp::spawn_random_entity() {
     
     demo_entities_.push_back(entity);
     std::cout << "Spawned entity at (" << x << ", " << y << ", " << z << ")\n";
+}
+
+void CorePulseApp::trigger_sphere_drop() {
+    if (!world_ || sphere_entity_ == 0) return;
+    
+    // Check if the sphere entity is still valid
+    if (!world_->is_valid_entity(sphere_entity_)) {
+        std::cout << "Sphere entity no longer valid, cannot reset drop" << std::endl;
+        return;
+    }
+    
+    // Reset sphere position to high above the platform
+    auto& transform = world_->get_component<Transform>(sphere_entity_);
+    transform.position = glm::vec3(0.0f, 8.0f, 0.0f); // Start even higher for dramatic effect
+    
+    // Reset sphere velocity to zero
+    auto& rigidbody = world_->get_component<RigidBody>(sphere_entity_);
+    rigidbody.velocity = glm::vec3(0.0f);
+    rigidbody.angular_velocity = glm::vec3(0.0f);
+    
+    std::cout << "SPHERE DROP TRIGGERED! Watch the red sphere fall!" << std::endl;
 }
 
 } // namespace CorePulse

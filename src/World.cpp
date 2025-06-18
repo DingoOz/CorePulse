@@ -84,6 +84,9 @@ void World::register_core_components() {
     register_component<RigidBody>();
     register_component<Collider>();
     register_component<Ground>();
+    
+    // Audio components
+    register_component<AudioSourceComponent>();
 }
 
 } // namespace CorePulse

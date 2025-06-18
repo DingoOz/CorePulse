@@ -1,6 +1,7 @@
 #include "Systems.h"
 #include "World.h"
 #include "Mesh.h"
+#include "AudioSystem.h"
 #include <iostream>
 
 namespace CorePulse {
@@ -163,6 +164,8 @@ void PhysicsSystem::init() {
 void PhysicsSystem::update(float delta_time) {
     if (!world_) return;
     
+    // Physics system is now working correctly
+    
     // Update physics for all entities with RigidBody component
     for (Entity entity : entities) {
         if (!world_->has_component<Transform>(entity) || !world_->has_component<RigidBody>(entity)) {
@@ -300,6 +303,16 @@ bool PhysicsSystem::check_collision(Entity entity1, Entity entity2) {
 void PhysicsSystem::resolve_collision(Entity entity1, Entity entity2) {
     if (!world_->has_component<RigidBody>(entity1) || !world_->has_component<RigidBody>(entity2)) {
         return;
+    }
+    
+    // Trigger collision audio for entities with AudioSourceComponent
+    if (audio_system_) {
+        if (world_->has_component<AudioSourceComponent>(entity1)) {
+            audio_system_->trigger_collision_audio(entity1);
+        }
+        if (world_->has_component<AudioSourceComponent>(entity2)) {
+            audio_system_->trigger_collision_audio(entity2);
+        }
     }
     
     auto& rb1 = world_->get_component<RigidBody>(entity1);
