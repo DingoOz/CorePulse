@@ -11,11 +11,14 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/dingo/Programming/CorePulse/src/Application.cpp" "CMakeFiles/corepulse.dir/src/Application.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Application.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/Camera.cpp" "CMakeFiles/corepulse.dir/src/Camera.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Camera.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/CorePulseApp.cpp" "CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.o.d"
+  "/home/dingo/Programming/CorePulse/src/Entity.cpp" "CMakeFiles/corepulse.dir/src/Entity.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Entity.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/Input.cpp" "CMakeFiles/corepulse.dir/src/Input.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Input.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/Mesh.cpp" "CMakeFiles/corepulse.dir/src/Mesh.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Mesh.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/Renderer.cpp" "CMakeFiles/corepulse.dir/src/Renderer.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Renderer.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/Shader.cpp" "CMakeFiles/corepulse.dir/src/Shader.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Shader.cpp.o.d"
+  "/home/dingo/Programming/CorePulse/src/Systems.cpp" "CMakeFiles/corepulse.dir/src/Systems.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Systems.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/Window.cpp" "CMakeFiles/corepulse.dir/src/Window.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Window.cpp.o.d"
+  "/home/dingo/Programming/CorePulse/src/World.cpp" "CMakeFiles/corepulse.dir/src/World.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/World.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/main.cpp" "CMakeFiles/corepulse.dir/src/main.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/main.cpp.o.d"
   )
 
