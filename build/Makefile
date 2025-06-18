@@ -269,6 +269,30 @@ src/CorePulseApp.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.s
 .PHONY : src/CorePulseApp.cpp.s
 
+src/Entity.o: src/Entity.cpp.o
+.PHONY : src/Entity.o
+
+# target to build an object file
+src/Entity.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Entity.cpp.o
+.PHONY : src/Entity.cpp.o
+
+src/Entity.i: src/Entity.cpp.i
+.PHONY : src/Entity.i
+
+# target to preprocess a source file
+src/Entity.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Entity.cpp.i
+.PHONY : src/Entity.cpp.i
+
+src/Entity.s: src/Entity.cpp.s
+.PHONY : src/Entity.s
+
+# target to generate assembly for a file
+src/Entity.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Entity.cpp.s
+.PHONY : src/Entity.cpp.s
+
 src/Input.o: src/Input.cpp.o
 .PHONY : src/Input.o
 
@@ -365,6 +389,30 @@ src/Shader.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Shader.cpp.s
 .PHONY : src/Shader.cpp.s
 
+src/Systems.o: src/Systems.cpp.o
+.PHONY : src/Systems.o
+
+# target to build an object file
+src/Systems.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Systems.cpp.o
+.PHONY : src/Systems.cpp.o
+
+src/Systems.i: src/Systems.cpp.i
+.PHONY : src/Systems.i
+
+# target to preprocess a source file
+src/Systems.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Systems.cpp.i
+.PHONY : src/Systems.cpp.i
+
+src/Systems.s: src/Systems.cpp.s
+.PHONY : src/Systems.s
+
+# target to generate assembly for a file
+src/Systems.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Systems.cpp.s
+.PHONY : src/Systems.cpp.s
+
 src/Window.o: src/Window.cpp.o
 .PHONY : src/Window.o
 
@@ -388,6 +436,30 @@ src/Window.s: src/Window.cpp.s
 src/Window.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Window.cpp.s
 .PHONY : src/Window.cpp.s
+
+src/World.o: src/World.cpp.o
+.PHONY : src/World.o
+
+# target to build an object file
+src/World.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/World.cpp.o
+.PHONY : src/World.cpp.o
+
+src/World.i: src/World.cpp.i
+.PHONY : src/World.i
+
+# target to preprocess a source file
+src/World.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/World.cpp.i
+.PHONY : src/World.cpp.i
+
+src/World.s: src/World.cpp.s
+.PHONY : src/World.s
+
+# target to generate assembly for a file
+src/World.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/World.cpp.s
+.PHONY : src/World.cpp.s
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
@@ -437,6 +509,9 @@ help:
 	@echo "... src/CorePulseApp.o"
 	@echo "... src/CorePulseApp.i"
 	@echo "... src/CorePulseApp.s"
+	@echo "... src/Entity.o"
+	@echo "... src/Entity.i"
+	@echo "... src/Entity.s"
 	@echo "... src/Input.o"
 	@echo "... src/Input.i"
 	@echo "... src/Input.s"
@@ -449,9 +524,15 @@ help:
 	@echo "... src/Shader.o"
 	@echo "... src/Shader.i"
 	@echo "... src/Shader.s"
+	@echo "... src/Systems.o"
+	@echo "... src/Systems.i"
+	@echo "... src/Systems.s"
 	@echo "... src/Window.o"
 	@echo "... src/Window.i"
 	@echo "... src/Window.s"
+	@echo "... src/World.o"
+	@echo "... src/World.i"
+	@echo "... src/World.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
