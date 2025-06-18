@@ -70,7 +70,7 @@ bool CorePulseApp::on_initialize() {
     std::cout << "  I   - Toggle Info Display\n";
     std::cout << "  W   - Toggle Wireframe Mode\n";
     std::cout << "  SPACE - Test\n";
-    std::cout << "  Mouse wheel - Zoom camera\n";
+    std::cout << "  Mouse wheel - Zoom in/out (radius: 2-20)\n";
     std::cout << "  Arrow keys - Move camera\n";
     
     return true;
@@ -109,6 +109,7 @@ void CorePulseApp::on_render() {
     if (render_count % 60 == 1) {  // Print every 60 frames (once per second at 60fps)
         std::cout << "Rendering frame " << render_count << ", angle: " << camera_angle_ << std::endl;
         std::cout << "Camera position: (" << camera_->get_position().x << ", " << camera_->get_position().y << ", " << camera_->get_position().z << ")" << std::endl;
+        std::cout << "Camera radius: " << camera_radius_ << std::endl;
         if (world_) {
             std::cout << "ECS entities: " << world_->get_entity_count() << std::endl;
         }
@@ -262,15 +263,22 @@ void CorePulseApp::on_mouse_moved(int x, int y, int dx, int dy) {
 }
 
 void CorePulseApp::on_mouse_wheel(int x, int y) {
-    if (camera_) {
-        float zoom_speed = 0.5f;
-        if (y > 0) {
-            camera_->move_forward(zoom_speed);
-        } else if (y < 0) {
-            camera_->move_backward(zoom_speed);
-        }
+    float zoom_speed = 1.0f;
+    float min_radius = 2.0f;
+    float max_radius = 20.0f;
+    
+    if (y > 0) {
+        // Zoom in (decrease radius)
+        camera_radius_ -= zoom_speed;
+    } else if (y < 0) {
+        // Zoom out (increase radius)
+        camera_radius_ += zoom_speed;
     }
-    std::cout << "Mouse wheel: (" << x << ", " << y << ")\n";
+    
+    // Clamp radius to reasonable bounds
+    camera_radius_ = std::max(min_radius, std::min(max_radius, camera_radius_));
+    
+    std::cout << "Mouse wheel zoom: radius = " << camera_radius_ << std::endl;
 }
 
 void CorePulseApp::on_window_resized(int width, int height) {
@@ -301,12 +309,14 @@ void CorePulseApp::update_window_title() {
 void CorePulseApp::update_camera_position() {
     if (!camera_) return;
     
-    // Orbit camera around the origin
-    float radius = 8.0f;
-    float x = radius * cos(glm::radians(camera_angle_));
-    float z = radius * sin(glm::radians(camera_angle_));
+    // Orbit camera around the origin with adjustable radius
+    float x = camera_radius_ * cos(glm::radians(camera_angle_));
+    float z = camera_radius_ * sin(glm::radians(camera_angle_));
     
-    camera_->set_position(glm::vec3(x, 2.0f, z));
+    // Keep camera height proportional to radius for better viewing angle
+    float camera_height = std::max(2.0f, camera_radius_ * 0.3f);
+    
+    camera_->set_position(glm::vec3(x, camera_height, z));
     camera_->look_at(glm::vec3(0.0f, 0.0f, 0.0f));
 }
 

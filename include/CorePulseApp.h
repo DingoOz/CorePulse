@@ -54,6 +54,7 @@ private:
     
     // Animation state
     float camera_angle_ = 0.0f;
+    float camera_radius_ = 8.0f;
     
     // UI state
     bool show_info_ = true;
