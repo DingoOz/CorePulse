@@ -153,111 +153,73 @@ vec3 getNormalFromMap() {
     return normalize(TBN * tangentNormal);
 }
 
-float DistributionGGX(vec3 N, vec3 H, float roughness) {
-    float a = roughness * roughness;
-    float a2 = a * a;
-    float NdotH = max(dot(N, H), 0.0);
-    float NdotH2 = NdotH * NdotH;
-    
-    float num = a2;
-    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
-    denom = PI * denom * denom;
-    
-    return num / denom;
-}
-
-float GeometrySchlickGGX(float NdotV, float roughness) {
-    float r = (roughness + 1.0);
-    float k = (r * r) / 8.0;
-    
-    float num = NdotV;
-    float denom = NdotV * (1.0 - k) + k;
-    
-    return num / denom;
-}
-
-float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
-    float NdotV = max(dot(N, V), 0.0);
-    float NdotL = max(dot(N, L), 0.0);
-    float ggx2 = GeometrySchlickGGX(NdotV, roughness);
-    float ggx1 = GeometrySchlickGGX(NdotL, roughness);
-    
-    return ggx1 * ggx2;
-}
-
-vec3 fresnelSchlick(float cosTheta, vec3 F0) {
-    return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
-}
-
+// Simplified PBR using Blinn-Phong with PBR textures (Intel GPU friendly)
 void main() {
-    // Sample material properties
+    // Sample base color texture
     vec4 baseColor = u_material.baseColorFactor;
     if (u_material.hasBaseColorTexture) {
         baseColor *= texture(u_material.baseColorTexture, tex_coords);
     }
     
-    // Alpha test
+    // Alpha test for masked materials
     if (u_material.alphaMode == 1) { // MASK
         if (baseColor.a < u_material.alphaCutoff) {
             discard;
         }
     }
     
+    // Sample metallic and roughness
     float metallic = u_material.metallicFactor;
     float roughness = u_material.roughnessFactor;
+    
     if (u_material.hasMetallicRoughnessTexture) {
         vec3 metallicRoughness = texture(u_material.metallicRoughnessTexture, tex_coords).rgb;
-        metallic *= metallicRoughness.b;
-        roughness *= metallicRoughness.g;
+        metallic *= metallicRoughness.b;    // Blue channel = metallic
+        roughness *= metallicRoughness.g;   // Green channel = roughness  
     }
     
+    // Sample emissive texture
     vec3 emissive = u_material.emissiveFactor;
     if (u_material.hasEmissiveTexture) {
         emissive *= texture(u_material.emissiveTexture, tex_coords).rgb;
     }
     
-    float occlusion = 1.0;
-    if (u_material.hasOcclusionTexture) {
-        occlusion = texture(u_material.occlusionTexture, tex_coords).r;
-    }
-    
-    // Calculate lighting
-    vec3 N = getNormalFromMap();
-    vec3 V = normalize(u_view_pos - frag_pos);
-    
-    vec3 F0 = vec3(0.04);
-    F0 = mix(F0, baseColor.rgb, metallic);
-    
-    // Simple directional light
+    // Use vertex normal (simplified - no normal mapping for Intel GPU compatibility)
+    vec3 N = normalize(normal);
     vec3 L = normalize(u_light_pos - frag_pos);
-    vec3 H = normalize(V + L);
-    float distance = length(u_light_pos - frag_pos);
-    float attenuation = 1.0 / (distance * distance);
-    vec3 radiance = u_light_color * attenuation;
+    vec3 V = normalize(u_view_pos - frag_pos);
+    vec3 H = normalize(L + V);
     
-    // Cook-Torrance BRDF
-    float NDF = DistributionGGX(N, H, roughness);
-    float G = GeometrySmith(N, V, L, roughness);
-    vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+    // Simplified lighting calculations
     
-    vec3 kS = F;
-    vec3 kD = vec3(1.0) - kS;
-    kD *= 1.0 - metallic;
+    // Ambient component
+    float ambient_strength = 0.15;
+    vec3 ambient = ambient_strength * baseColor.rgb;
     
-    vec3 numerator = NDF * G * F;
-    float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
-    vec3 specular = numerator / denominator;
-    
+    // Diffuse component (Lambert)
     float NdotL = max(dot(N, L), 0.0);
-    vec3 Lo = (kD * baseColor.rgb / PI + specular) * radiance * NdotL;
+    vec3 diffuse_color = baseColor.rgb * (1.0 - metallic); // Metals have no diffuse
+    vec3 diffuse = diffuse_color * NdotL * u_light_color;
     
-    // Ambient lighting
-    vec3 ambient = vec3(0.03) * baseColor.rgb * occlusion;
-    vec3 color = ambient + Lo + emissive;
+    // Specular component (Blinn-Phong modified for PBR)
+    float NdotH = max(dot(N, H), 0.0);
     
-    // HDR tonemapping
-    color = color / (color + vec3(1.0));
-    // Gamma correction
+    // Convert roughness to shininess (inverse relationship)
+    float shininess = mix(256.0, 16.0, roughness);
+    float spec_strength = pow(NdotH, shininess);
+    
+    // Metallic materials reflect base color, non-metallic reflect white-ish
+    vec3 spec_color = mix(vec3(0.04), baseColor.rgb, metallic);
+    vec3 specular = spec_strength * spec_color * u_light_color;
+    
+    // Simple attenuation
+    float distance = length(u_light_pos - frag_pos);
+    float attenuation = 1.0 / (1.0 + 0.01 * distance + 0.001 * distance * distance);
+    
+    // Combine lighting components
+    vec3 color = ambient + (diffuse + specular) * attenuation + emissive;
+    
+    // Simple gamma correction (no complex tonemapping)
     color = pow(color, vec3(1.0/2.2));
     
     frag_color = vec4(color, baseColor.a);
