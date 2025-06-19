@@ -29,6 +29,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/corepulse.dir/src/Shader.cpp.o.d"
   "CMakeFiles/corepulse.dir/src/Systems.cpp.o"
   "CMakeFiles/corepulse.dir/src/Systems.cpp.o.d"
+  "CMakeFiles/corepulse.dir/src/Terrain.cpp.o"
+  "CMakeFiles/corepulse.dir/src/Terrain.cpp.o.d"
   "CMakeFiles/corepulse.dir/src/Texture.cpp.o"
   "CMakeFiles/corepulse.dir/src/Texture.cpp.o.d"
   "CMakeFiles/corepulse.dir/src/Window.cpp.o"
