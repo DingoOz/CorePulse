@@ -3,6 +3,7 @@
 #include "Shader.h"
 #include "Mesh.h"
 #include "Camera.h"
+#include "Material.h"
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <memory>
@@ -45,6 +46,8 @@ public:
     // Rendering
     void render_mesh(const Mesh& mesh, const glm::mat4& model_matrix, const Camera& camera);
     void render_mesh(const Mesh& mesh, const glm::mat4& model_matrix, const Camera& camera, Shader& shader);
+    void render_mesh(const Mesh& mesh, const glm::mat4& model_matrix, const Camera& camera, const Material& material);
+    void render_mesh(const Mesh& mesh, const glm::mat4& model_matrix, const Camera& camera, const Material& material, Shader& shader);
     
     // Wireframe mode
     void set_wireframe_mode(bool enabled);
@@ -65,10 +68,13 @@ public:
     // Shaders
     Shader& get_default_shader() { return default_shader_; }
     const Shader& get_default_shader() const { return default_shader_; }
+    Shader& get_pbr_shader() { return pbr_shader_; }
+    const Shader& get_pbr_shader() const { return pbr_shader_; }
     
 private:
     bool initialized_ = false;
     Shader default_shader_;
+    Shader pbr_shader_;
     RenderStats stats_;
     
     // Render state
@@ -77,11 +83,16 @@ private:
     bool face_culling_enabled_ = true;
     
     bool create_default_shader();
+    bool create_pbr_shader();
     void update_render_state();
     
     // Default shader sources
     static const std::string default_vertex_shader_;
     static const std::string default_fragment_shader_;
+    
+    // PBR shader sources
+    static const std::string pbr_vertex_shader_;
+    static const std::string pbr_fragment_shader_;
 };
 
 } // namespace CorePulse

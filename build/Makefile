@@ -221,6 +221,30 @@ src/Application.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Application.cpp.s
 .PHONY : src/Application.cpp.s
 
+src/AssetManager.o: src/AssetManager.cpp.o
+.PHONY : src/AssetManager.o
+
+# target to build an object file
+src/AssetManager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/AssetManager.cpp.o
+.PHONY : src/AssetManager.cpp.o
+
+src/AssetManager.i: src/AssetManager.cpp.i
+.PHONY : src/AssetManager.i
+
+# target to preprocess a source file
+src/AssetManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/AssetManager.cpp.i
+.PHONY : src/AssetManager.cpp.i
+
+src/AssetManager.s: src/AssetManager.cpp.s
+.PHONY : src/AssetManager.s
+
+# target to generate assembly for a file
+src/AssetManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/AssetManager.cpp.s
+.PHONY : src/AssetManager.cpp.s
+
 src/AudioManager.o: src/AudioManager.cpp.o
 .PHONY : src/AudioManager.o
 
@@ -341,6 +365,30 @@ src/Entity.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Entity.cpp.s
 .PHONY : src/Entity.cpp.s
 
+src/GLTFLoader.o: src/GLTFLoader.cpp.o
+.PHONY : src/GLTFLoader.o
+
+# target to build an object file
+src/GLTFLoader.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/GLTFLoader.cpp.o
+.PHONY : src/GLTFLoader.cpp.o
+
+src/GLTFLoader.i: src/GLTFLoader.cpp.i
+.PHONY : src/GLTFLoader.i
+
+# target to preprocess a source file
+src/GLTFLoader.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/GLTFLoader.cpp.i
+.PHONY : src/GLTFLoader.cpp.i
+
+src/GLTFLoader.s: src/GLTFLoader.cpp.s
+.PHONY : src/GLTFLoader.s
+
+# target to generate assembly for a file
+src/GLTFLoader.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/GLTFLoader.cpp.s
+.PHONY : src/GLTFLoader.cpp.s
+
 src/Input.o: src/Input.cpp.o
 .PHONY : src/Input.o
 
@@ -364,6 +412,54 @@ src/Input.s: src/Input.cpp.s
 src/Input.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Input.cpp.s
 .PHONY : src/Input.cpp.s
+
+src/Material.o: src/Material.cpp.o
+.PHONY : src/Material.o
+
+# target to build an object file
+src/Material.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Material.cpp.o
+.PHONY : src/Material.cpp.o
+
+src/Material.i: src/Material.cpp.i
+.PHONY : src/Material.i
+
+# target to preprocess a source file
+src/Material.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Material.cpp.i
+.PHONY : src/Material.cpp.i
+
+src/Material.s: src/Material.cpp.s
+.PHONY : src/Material.s
+
+# target to generate assembly for a file
+src/Material.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Material.cpp.s
+.PHONY : src/Material.cpp.s
+
+src/MechExtensions.o: src/MechExtensions.cpp.o
+.PHONY : src/MechExtensions.o
+
+# target to build an object file
+src/MechExtensions.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/MechExtensions.cpp.o
+.PHONY : src/MechExtensions.cpp.o
+
+src/MechExtensions.i: src/MechExtensions.cpp.i
+.PHONY : src/MechExtensions.i
+
+# target to preprocess a source file
+src/MechExtensions.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/MechExtensions.cpp.i
+.PHONY : src/MechExtensions.cpp.i
+
+src/MechExtensions.s: src/MechExtensions.cpp.s
+.PHONY : src/MechExtensions.s
+
+# target to generate assembly for a file
+src/MechExtensions.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/MechExtensions.cpp.s
+.PHONY : src/MechExtensions.cpp.s
 
 src/Mesh.o: src/Mesh.cpp.o
 .PHONY : src/Mesh.o
@@ -461,6 +557,30 @@ src/Systems.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Systems.cpp.s
 .PHONY : src/Systems.cpp.s
 
+src/Texture.o: src/Texture.cpp.o
+.PHONY : src/Texture.o
+
+# target to build an object file
+src/Texture.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Texture.cpp.o
+.PHONY : src/Texture.cpp.o
+
+src/Texture.i: src/Texture.cpp.i
+.PHONY : src/Texture.i
+
+# target to preprocess a source file
+src/Texture.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Texture.cpp.i
+.PHONY : src/Texture.cpp.i
+
+src/Texture.s: src/Texture.cpp.s
+.PHONY : src/Texture.s
+
+# target to generate assembly for a file
+src/Texture.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Texture.cpp.s
+.PHONY : src/Texture.cpp.s
+
 src/Window.o: src/Window.cpp.o
 .PHONY : src/Window.o
 
@@ -551,6 +671,9 @@ help:
 	@echo "... src/Application.o"
 	@echo "... src/Application.i"
 	@echo "... src/Application.s"
+	@echo "... src/AssetManager.o"
+	@echo "... src/AssetManager.i"
+	@echo "... src/AssetManager.s"
 	@echo "... src/AudioManager.o"
 	@echo "... src/AudioManager.i"
 	@echo "... src/AudioManager.s"
@@ -566,9 +689,18 @@ help:
 	@echo "... src/Entity.o"
 	@echo "... src/Entity.i"
 	@echo "... src/Entity.s"
+	@echo "... src/GLTFLoader.o"
+	@echo "... src/GLTFLoader.i"
+	@echo "... src/GLTFLoader.s"
 	@echo "... src/Input.o"
 	@echo "... src/Input.i"
 	@echo "... src/Input.s"
+	@echo "... src/Material.o"
+	@echo "... src/Material.i"
+	@echo "... src/Material.s"
+	@echo "... src/MechExtensions.o"
+	@echo "... src/MechExtensions.i"
+	@echo "... src/MechExtensions.s"
 	@echo "... src/Mesh.o"
 	@echo "... src/Mesh.i"
 	@echo "... src/Mesh.s"
@@ -581,6 +713,9 @@ help:
 	@echo "... src/Systems.o"
 	@echo "... src/Systems.i"
 	@echo "... src/Systems.s"
+	@echo "... src/Texture.o"
+	@echo "... src/Texture.i"
+	@echo "... src/Texture.s"
 	@echo "... src/Window.o"
 	@echo "... src/Window.i"
 	@echo "... src/Window.s"
