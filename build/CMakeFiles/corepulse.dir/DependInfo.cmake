@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/dingo/Programming/CorePulse/src/Application.cpp" "CMakeFiles/corepulse.dir/src/Application.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Application.cpp.o.d"
+  "/home/dingo/Programming/CorePulse/src/AssetManager.cpp" "CMakeFiles/corepulse.dir/src/AssetManager.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/AssetManager.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/AudioManager.cpp" "CMakeFiles/corepulse.dir/src/AudioManager.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/AudioManager.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/AudioSystem.cpp" "CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/Camera.cpp" "CMakeFiles/corepulse.dir/src/Camera.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Camera.cpp.o.d"
@@ -17,6 +18,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/dingo/Programming/CorePulse/src/GLTFLoader.cpp" "CMakeFiles/corepulse.dir/src/GLTFLoader.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/GLTFLoader.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/Input.cpp" "CMakeFiles/corepulse.dir/src/Input.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Input.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/Material.cpp" "CMakeFiles/corepulse.dir/src/Material.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Material.cpp.o.d"
+  "/home/dingo/Programming/CorePulse/src/MechExtensions.cpp" "CMakeFiles/corepulse.dir/src/MechExtensions.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/MechExtensions.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/Mesh.cpp" "CMakeFiles/corepulse.dir/src/Mesh.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Mesh.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/Renderer.cpp" "CMakeFiles/corepulse.dir/src/Renderer.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Renderer.cpp.o.d"
   "/home/dingo/Programming/CorePulse/src/Shader.cpp" "CMakeFiles/corepulse.dir/src/Shader.cpp.o" "gcc" "CMakeFiles/corepulse.dir/src/Shader.cpp.o.d"

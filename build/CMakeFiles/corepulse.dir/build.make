@@ -83,10 +83,24 @@ CMakeFiles/corepulse.dir/src/Application.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/corepulse.dir/src/Application.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dingo/Programming/CorePulse/src/Application.cpp -o CMakeFiles/corepulse.dir/src/Application.cpp.s
 
+CMakeFiles/corepulse.dir/src/AssetManager.cpp.o: CMakeFiles/corepulse.dir/flags.make
+CMakeFiles/corepulse.dir/src/AssetManager.cpp.o: /home/dingo/Programming/CorePulse/src/AssetManager.cpp
+CMakeFiles/corepulse.dir/src/AssetManager.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/corepulse.dir/src/AssetManager.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/AssetManager.cpp.o -MF CMakeFiles/corepulse.dir/src/AssetManager.cpp.o.d -o CMakeFiles/corepulse.dir/src/AssetManager.cpp.o -c /home/dingo/Programming/CorePulse/src/AssetManager.cpp
+
+CMakeFiles/corepulse.dir/src/AssetManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/corepulse.dir/src/AssetManager.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dingo/Programming/CorePulse/src/AssetManager.cpp > CMakeFiles/corepulse.dir/src/AssetManager.cpp.i
+
+CMakeFiles/corepulse.dir/src/AssetManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/corepulse.dir/src/AssetManager.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dingo/Programming/CorePulse/src/AssetManager.cpp -o CMakeFiles/corepulse.dir/src/AssetManager.cpp.s
+
 CMakeFiles/corepulse.dir/src/AudioManager.cpp.o: CMakeFiles/corepulse.dir/flags.make
 CMakeFiles/corepulse.dir/src/AudioManager.cpp.o: /home/dingo/Programming/CorePulse/src/AudioManager.cpp
 CMakeFiles/corepulse.dir/src/AudioManager.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/corepulse.dir/src/AudioManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/corepulse.dir/src/AudioManager.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/AudioManager.cpp.o -MF CMakeFiles/corepulse.dir/src/AudioManager.cpp.o.d -o CMakeFiles/corepulse.dir/src/AudioManager.cpp.o -c /home/dingo/Programming/CorePulse/src/AudioManager.cpp
 
 CMakeFiles/corepulse.dir/src/AudioManager.cpp.i: cmake_force
@@ -100,7 +114,7 @@ CMakeFiles/corepulse.dir/src/AudioManager.cpp.s: cmake_force
 CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o: CMakeFiles/corepulse.dir/flags.make
 CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o: /home/dingo/Programming/CorePulse/src/AudioSystem.cpp
 CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o -MF CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o.d -o CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o -c /home/dingo/Programming/CorePulse/src/AudioSystem.cpp
 
 CMakeFiles/corepulse.dir/src/AudioSystem.cpp.i: cmake_force
@@ -114,7 +128,7 @@ CMakeFiles/corepulse.dir/src/AudioSystem.cpp.s: cmake_force
 CMakeFiles/corepulse.dir/src/Camera.cpp.o: CMakeFiles/corepulse.dir/flags.make
 CMakeFiles/corepulse.dir/src/Camera.cpp.o: /home/dingo/Programming/CorePulse/src/Camera.cpp
 CMakeFiles/corepulse.dir/src/Camera.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/corepulse.dir/src/Camera.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/corepulse.dir/src/Camera.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/Camera.cpp.o -MF CMakeFiles/corepulse.dir/src/Camera.cpp.o.d -o CMakeFiles/corepulse.dir/src/Camera.cpp.o -c /home/dingo/Programming/CorePulse/src/Camera.cpp
 
 CMakeFiles/corepulse.dir/src/Camera.cpp.i: cmake_force
@@ -128,7 +142,7 @@ CMakeFiles/corepulse.dir/src/Camera.cpp.s: cmake_force
 CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.o: CMakeFiles/corepulse.dir/flags.make
 CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.o: /home/dingo/Programming/CorePulse/src/CorePulseApp.cpp
 CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.o -MF CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.o.d -o CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.o -c /home/dingo/Programming/CorePulse/src/CorePulseApp.cpp
 
 CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.i: cmake_force
@@ -142,7 +156,7 @@ CMakeFiles/corepulse.dir/src/CorePulseApp.cpp.s: cmake_force
 CMakeFiles/corepulse.dir/src/Entity.cpp.o: CMakeFiles/corepulse.dir/flags.make
 CMakeFiles/corepulse.dir/src/Entity.cpp.o: /home/dingo/Programming/CorePulse/src/Entity.cpp
 CMakeFiles/corepulse.dir/src/Entity.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/corepulse.dir/src/Entity.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/corepulse.dir/src/Entity.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/Entity.cpp.o -MF CMakeFiles/corepulse.dir/src/Entity.cpp.o.d -o CMakeFiles/corepulse.dir/src/Entity.cpp.o -c /home/dingo/Programming/CorePulse/src/Entity.cpp
 
 CMakeFiles/corepulse.dir/src/Entity.cpp.i: cmake_force
@@ -156,7 +170,7 @@ CMakeFiles/corepulse.dir/src/Entity.cpp.s: cmake_force
 CMakeFiles/corepulse.dir/src/GLTFLoader.cpp.o: CMakeFiles/corepulse.dir/flags.make
 CMakeFiles/corepulse.dir/src/GLTFLoader.cpp.o: /home/dingo/Programming/CorePulse/src/GLTFLoader.cpp
 CMakeFiles/corepulse.dir/src/GLTFLoader.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/corepulse.dir/src/GLTFLoader.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/corepulse.dir/src/GLTFLoader.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/GLTFLoader.cpp.o -MF CMakeFiles/corepulse.dir/src/GLTFLoader.cpp.o.d -o CMakeFiles/corepulse.dir/src/GLTFLoader.cpp.o -c /home/dingo/Programming/CorePulse/src/GLTFLoader.cpp
 
 CMakeFiles/corepulse.dir/src/GLTFLoader.cpp.i: cmake_force
@@ -170,7 +184,7 @@ CMakeFiles/corepulse.dir/src/GLTFLoader.cpp.s: cmake_force
 CMakeFiles/corepulse.dir/src/Input.cpp.o: CMakeFiles/corepulse.dir/flags.make
 CMakeFiles/corepulse.dir/src/Input.cpp.o: /home/dingo/Programming/CorePulse/src/Input.cpp
 CMakeFiles/corepulse.dir/src/Input.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/corepulse.dir/src/Input.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/corepulse.dir/src/Input.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/Input.cpp.o -MF CMakeFiles/corepulse.dir/src/Input.cpp.o.d -o CMakeFiles/corepulse.dir/src/Input.cpp.o -c /home/dingo/Programming/CorePulse/src/Input.cpp
 
 CMakeFiles/corepulse.dir/src/Input.cpp.i: cmake_force
@@ -184,7 +198,7 @@ CMakeFiles/corepulse.dir/src/Input.cpp.s: cmake_force
 CMakeFiles/corepulse.dir/src/Material.cpp.o: CMakeFiles/corepulse.dir/flags.make
 CMakeFiles/corepulse.dir/src/Material.cpp.o: /home/dingo/Programming/CorePulse/src/Material.cpp
 CMakeFiles/corepulse.dir/src/Material.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/corepulse.dir/src/Material.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/corepulse.dir/src/Material.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/Material.cpp.o -MF CMakeFiles/corepulse.dir/src/Material.cpp.o.d -o CMakeFiles/corepulse.dir/src/Material.cpp.o -c /home/dingo/Programming/CorePulse/src/Material.cpp
 
 CMakeFiles/corepulse.dir/src/Material.cpp.i: cmake_force
@@ -195,10 +209,24 @@ CMakeFiles/corepulse.dir/src/Material.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/corepulse.dir/src/Material.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dingo/Programming/CorePulse/src/Material.cpp -o CMakeFiles/corepulse.dir/src/Material.cpp.s
 
+CMakeFiles/corepulse.dir/src/MechExtensions.cpp.o: CMakeFiles/corepulse.dir/flags.make
+CMakeFiles/corepulse.dir/src/MechExtensions.cpp.o: /home/dingo/Programming/CorePulse/src/MechExtensions.cpp
+CMakeFiles/corepulse.dir/src/MechExtensions.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/corepulse.dir/src/MechExtensions.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/MechExtensions.cpp.o -MF CMakeFiles/corepulse.dir/src/MechExtensions.cpp.o.d -o CMakeFiles/corepulse.dir/src/MechExtensions.cpp.o -c /home/dingo/Programming/CorePulse/src/MechExtensions.cpp
+
+CMakeFiles/corepulse.dir/src/MechExtensions.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/corepulse.dir/src/MechExtensions.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dingo/Programming/CorePulse/src/MechExtensions.cpp > CMakeFiles/corepulse.dir/src/MechExtensions.cpp.i
+
+CMakeFiles/corepulse.dir/src/MechExtensions.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/corepulse.dir/src/MechExtensions.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dingo/Programming/CorePulse/src/MechExtensions.cpp -o CMakeFiles/corepulse.dir/src/MechExtensions.cpp.s
+
 CMakeFiles/corepulse.dir/src/Mesh.cpp.o: CMakeFiles/corepulse.dir/flags.make
 CMakeFiles/corepulse.dir/src/Mesh.cpp.o: /home/dingo/Programming/CorePulse/src/Mesh.cpp
 CMakeFiles/corepulse.dir/src/Mesh.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/corepulse.dir/src/Mesh.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/corepulse.dir/src/Mesh.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/Mesh.cpp.o -MF CMakeFiles/corepulse.dir/src/Mesh.cpp.o.d -o CMakeFiles/corepulse.dir/src/Mesh.cpp.o -c /home/dingo/Programming/CorePulse/src/Mesh.cpp
 
 CMakeFiles/corepulse.dir/src/Mesh.cpp.i: cmake_force
@@ -212,7 +240,7 @@ CMakeFiles/corepulse.dir/src/Mesh.cpp.s: cmake_force
 CMakeFiles/corepulse.dir/src/Renderer.cpp.o: CMakeFiles/corepulse.dir/flags.make
 CMakeFiles/corepulse.dir/src/Renderer.cpp.o: /home/dingo/Programming/CorePulse/src/Renderer.cpp
 CMakeFiles/corepulse.dir/src/Renderer.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/corepulse.dir/src/Renderer.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/corepulse.dir/src/Renderer.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/Renderer.cpp.o -MF CMakeFiles/corepulse.dir/src/Renderer.cpp.o.d -o CMakeFiles/corepulse.dir/src/Renderer.cpp.o -c /home/dingo/Programming/CorePulse/src/Renderer.cpp
 
 CMakeFiles/corepulse.dir/src/Renderer.cpp.i: cmake_force
@@ -226,7 +254,7 @@ CMakeFiles/corepulse.dir/src/Renderer.cpp.s: cmake_force
 CMakeFiles/corepulse.dir/src/Shader.cpp.o: CMakeFiles/corepulse.dir/flags.make
 CMakeFiles/corepulse.dir/src/Shader.cpp.o: /home/dingo/Programming/CorePulse/src/Shader.cpp
 CMakeFiles/corepulse.dir/src/Shader.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/corepulse.dir/src/Shader.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/corepulse.dir/src/Shader.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/Shader.cpp.o -MF CMakeFiles/corepulse.dir/src/Shader.cpp.o.d -o CMakeFiles/corepulse.dir/src/Shader.cpp.o -c /home/dingo/Programming/CorePulse/src/Shader.cpp
 
 CMakeFiles/corepulse.dir/src/Shader.cpp.i: cmake_force
@@ -240,7 +268,7 @@ CMakeFiles/corepulse.dir/src/Shader.cpp.s: cmake_force
 CMakeFiles/corepulse.dir/src/Systems.cpp.o: CMakeFiles/corepulse.dir/flags.make
 CMakeFiles/corepulse.dir/src/Systems.cpp.o: /home/dingo/Programming/CorePulse/src/Systems.cpp
 CMakeFiles/corepulse.dir/src/Systems.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/corepulse.dir/src/Systems.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/corepulse.dir/src/Systems.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/Systems.cpp.o -MF CMakeFiles/corepulse.dir/src/Systems.cpp.o.d -o CMakeFiles/corepulse.dir/src/Systems.cpp.o -c /home/dingo/Programming/CorePulse/src/Systems.cpp
 
 CMakeFiles/corepulse.dir/src/Systems.cpp.i: cmake_force
@@ -254,7 +282,7 @@ CMakeFiles/corepulse.dir/src/Systems.cpp.s: cmake_force
 CMakeFiles/corepulse.dir/src/Texture.cpp.o: CMakeFiles/corepulse.dir/flags.make
 CMakeFiles/corepulse.dir/src/Texture.cpp.o: /home/dingo/Programming/CorePulse/src/Texture.cpp
 CMakeFiles/corepulse.dir/src/Texture.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/corepulse.dir/src/Texture.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/corepulse.dir/src/Texture.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/Texture.cpp.o -MF CMakeFiles/corepulse.dir/src/Texture.cpp.o.d -o CMakeFiles/corepulse.dir/src/Texture.cpp.o -c /home/dingo/Programming/CorePulse/src/Texture.cpp
 
 CMakeFiles/corepulse.dir/src/Texture.cpp.i: cmake_force
@@ -268,7 +296,7 @@ CMakeFiles/corepulse.dir/src/Texture.cpp.s: cmake_force
 CMakeFiles/corepulse.dir/src/Window.cpp.o: CMakeFiles/corepulse.dir/flags.make
 CMakeFiles/corepulse.dir/src/Window.cpp.o: /home/dingo/Programming/CorePulse/src/Window.cpp
 CMakeFiles/corepulse.dir/src/Window.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/corepulse.dir/src/Window.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/corepulse.dir/src/Window.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/Window.cpp.o -MF CMakeFiles/corepulse.dir/src/Window.cpp.o.d -o CMakeFiles/corepulse.dir/src/Window.cpp.o -c /home/dingo/Programming/CorePulse/src/Window.cpp
 
 CMakeFiles/corepulse.dir/src/Window.cpp.i: cmake_force
@@ -282,7 +310,7 @@ CMakeFiles/corepulse.dir/src/Window.cpp.s: cmake_force
 CMakeFiles/corepulse.dir/src/World.cpp.o: CMakeFiles/corepulse.dir/flags.make
 CMakeFiles/corepulse.dir/src/World.cpp.o: /home/dingo/Programming/CorePulse/src/World.cpp
 CMakeFiles/corepulse.dir/src/World.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/corepulse.dir/src/World.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/corepulse.dir/src/World.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/World.cpp.o -MF CMakeFiles/corepulse.dir/src/World.cpp.o.d -o CMakeFiles/corepulse.dir/src/World.cpp.o -c /home/dingo/Programming/CorePulse/src/World.cpp
 
 CMakeFiles/corepulse.dir/src/World.cpp.i: cmake_force
@@ -296,7 +324,7 @@ CMakeFiles/corepulse.dir/src/World.cpp.s: cmake_force
 CMakeFiles/corepulse.dir/src/main.cpp.o: CMakeFiles/corepulse.dir/flags.make
 CMakeFiles/corepulse.dir/src/main.cpp.o: /home/dingo/Programming/CorePulse/src/main.cpp
 CMakeFiles/corepulse.dir/src/main.cpp.o: CMakeFiles/corepulse.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/corepulse.dir/src/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/corepulse.dir/src/main.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/corepulse.dir/src/main.cpp.o -MF CMakeFiles/corepulse.dir/src/main.cpp.o.d -o CMakeFiles/corepulse.dir/src/main.cpp.o -c /home/dingo/Programming/CorePulse/src/main.cpp
 
 CMakeFiles/corepulse.dir/src/main.cpp.i: cmake_force
@@ -310,6 +338,7 @@ CMakeFiles/corepulse.dir/src/main.cpp.s: cmake_force
 # Object files for target corepulse
 corepulse_OBJECTS = \
 "CMakeFiles/corepulse.dir/src/Application.cpp.o" \
+"CMakeFiles/corepulse.dir/src/AssetManager.cpp.o" \
 "CMakeFiles/corepulse.dir/src/AudioManager.cpp.o" \
 "CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o" \
 "CMakeFiles/corepulse.dir/src/Camera.cpp.o" \
@@ -318,6 +347,7 @@ corepulse_OBJECTS = \
 "CMakeFiles/corepulse.dir/src/GLTFLoader.cpp.o" \
 "CMakeFiles/corepulse.dir/src/Input.cpp.o" \
 "CMakeFiles/corepulse.dir/src/Material.cpp.o" \
+"CMakeFiles/corepulse.dir/src/MechExtensions.cpp.o" \
 "CMakeFiles/corepulse.dir/src/Mesh.cpp.o" \
 "CMakeFiles/corepulse.dir/src/Renderer.cpp.o" \
 "CMakeFiles/corepulse.dir/src/Shader.cpp.o" \
@@ -331,6 +361,7 @@ corepulse_OBJECTS = \
 corepulse_EXTERNAL_OBJECTS =
 
 bin/corepulse: CMakeFiles/corepulse.dir/src/Application.cpp.o
+bin/corepulse: CMakeFiles/corepulse.dir/src/AssetManager.cpp.o
 bin/corepulse: CMakeFiles/corepulse.dir/src/AudioManager.cpp.o
 bin/corepulse: CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o
 bin/corepulse: CMakeFiles/corepulse.dir/src/Camera.cpp.o
@@ -339,6 +370,7 @@ bin/corepulse: CMakeFiles/corepulse.dir/src/Entity.cpp.o
 bin/corepulse: CMakeFiles/corepulse.dir/src/GLTFLoader.cpp.o
 bin/corepulse: CMakeFiles/corepulse.dir/src/Input.cpp.o
 bin/corepulse: CMakeFiles/corepulse.dir/src/Material.cpp.o
+bin/corepulse: CMakeFiles/corepulse.dir/src/MechExtensions.cpp.o
 bin/corepulse: CMakeFiles/corepulse.dir/src/Mesh.cpp.o
 bin/corepulse: CMakeFiles/corepulse.dir/src/Renderer.cpp.o
 bin/corepulse: CMakeFiles/corepulse.dir/src/Shader.cpp.o
@@ -351,7 +383,7 @@ bin/corepulse: CMakeFiles/corepulse.dir/build.make
 bin/corepulse: /usr/lib/x86_64-linux-gnu/libGLX.so
 bin/corepulse: /usr/lib/x86_64-linux-gnu/libOpenGL.so
 bin/corepulse: CMakeFiles/corepulse.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Linking CXX executable bin/corepulse"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Linking CXX executable bin/corepulse"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/corepulse.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

@@ -2,6 +2,7 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "Texture.h"
+#include "MechExtensions.h"
 #include <fstream>
 #include <iostream>
 #include <filesystem>
@@ -1138,6 +1139,54 @@ std::vector<T> GLTFLoader::extract_accessor_data(uint32_t accessor_index) const 
     }
     
     return result;
+}
+
+std::optional<CP_Walker_Hardpoints> GLTFLoader::extract_hardpoints() {
+    if (!loaded_) {
+        set_error("Cannot extract hardpoints: no glTF file loaded");
+        return std::nullopt;
+    }
+    
+    // Check for the CP_walker_hardpoints extension in the document
+    if (document_.extensions.contains("CP_walker_hardpoints")) {
+        try {
+            std::cout << "GLTFLoader: Found CP_walker_hardpoints extension" << std::endl;
+            return CP_Walker_Hardpoints::from_json(document_.extensions["CP_walker_hardpoints"]);
+        } catch (const std::exception& e) {
+            set_error("Failed to parse CP_walker_hardpoints extension: " + std::string(e.what()));
+            return std::nullopt;
+        }
+    }
+    
+    // Also check scene-level extensions (alternative location)
+    if (!document_.scenes.empty() && !document_.scenes[document_.scene].nodes.empty()) {
+        // Check the first node for extensions (common pattern)
+        // Note: In a full implementation, we'd check all nodes
+        std::cout << "GLTFLoader: No document-level hardpoints extension found" << std::endl;
+    }
+    
+    return std::nullopt;
+}
+
+std::optional<CP_Damage_Zones> GLTFLoader::extract_damage_zones() {
+    if (!loaded_) {
+        set_error("Cannot extract damage zones: no glTF file loaded");
+        return std::nullopt;
+    }
+    
+    // Check for the CP_damage_zones extension in the document
+    if (document_.extensions.contains("CP_damage_zones")) {
+        try {
+            std::cout << "GLTFLoader: Found CP_damage_zones extension" << std::endl;
+            return CP_Damage_Zones::from_json(document_.extensions["CP_damage_zones"]);
+        } catch (const std::exception& e) {
+            set_error("Failed to parse CP_damage_zones extension: " + std::string(e.what()));
+            return std::nullopt;
+        }
+    }
+    
+    std::cout << "GLTFLoader: No CP_damage_zones extension found" << std::endl;
+    return std::nullopt;
 }
 
 void GLTFLoader::set_error(const std::string& message) const {

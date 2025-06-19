@@ -98,12 +98,12 @@ tests/clean: tests/CMakeFiles/corepulse_tests.dir/clean
 CMakeFiles/corepulse.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18 "Built target corepulse"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 "Built target corepulse"
 .PHONY : CMakeFiles/corepulse.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/corepulse.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dingo/Programming/CorePulse/build/CMakeFiles 18
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dingo/Programming/CorePulse/build/CMakeFiles 20
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/corepulse.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dingo/Programming/CorePulse/build/CMakeFiles 0
 .PHONY : CMakeFiles/corepulse.dir/rule
@@ -124,7 +124,7 @@ CMakeFiles/corepulse.dir/clean:
 tests/CMakeFiles/corepulse_tests.dir/all:
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/corepulse_tests.dir/build.make tests/CMakeFiles/corepulse_tests.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/corepulse_tests.dir/build.make tests/CMakeFiles/corepulse_tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=19,20 "Built target corepulse_tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/dingo/Programming/CorePulse/build/CMakeFiles --progress-num=21,22 "Built target corepulse_tests"
 .PHONY : tests/CMakeFiles/corepulse_tests.dir/all
 
 # Build rule for subdir invocation for target.

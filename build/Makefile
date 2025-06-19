@@ -221,6 +221,30 @@ src/Application.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Application.cpp.s
 .PHONY : src/Application.cpp.s
 
+src/AssetManager.o: src/AssetManager.cpp.o
+.PHONY : src/AssetManager.o
+
+# target to build an object file
+src/AssetManager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/AssetManager.cpp.o
+.PHONY : src/AssetManager.cpp.o
+
+src/AssetManager.i: src/AssetManager.cpp.i
+.PHONY : src/AssetManager.i
+
+# target to preprocess a source file
+src/AssetManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/AssetManager.cpp.i
+.PHONY : src/AssetManager.cpp.i
+
+src/AssetManager.s: src/AssetManager.cpp.s
+.PHONY : src/AssetManager.s
+
+# target to generate assembly for a file
+src/AssetManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/AssetManager.cpp.s
+.PHONY : src/AssetManager.cpp.s
+
 src/AudioManager.o: src/AudioManager.cpp.o
 .PHONY : src/AudioManager.o
 
@@ -412,6 +436,30 @@ src/Material.s: src/Material.cpp.s
 src/Material.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Material.cpp.s
 .PHONY : src/Material.cpp.s
+
+src/MechExtensions.o: src/MechExtensions.cpp.o
+.PHONY : src/MechExtensions.o
+
+# target to build an object file
+src/MechExtensions.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/MechExtensions.cpp.o
+.PHONY : src/MechExtensions.cpp.o
+
+src/MechExtensions.i: src/MechExtensions.cpp.i
+.PHONY : src/MechExtensions.i
+
+# target to preprocess a source file
+src/MechExtensions.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/MechExtensions.cpp.i
+.PHONY : src/MechExtensions.cpp.i
+
+src/MechExtensions.s: src/MechExtensions.cpp.s
+.PHONY : src/MechExtensions.s
+
+# target to generate assembly for a file
+src/MechExtensions.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/MechExtensions.cpp.s
+.PHONY : src/MechExtensions.cpp.s
 
 src/Mesh.o: src/Mesh.cpp.o
 .PHONY : src/Mesh.o
@@ -623,6 +671,9 @@ help:
 	@echo "... src/Application.o"
 	@echo "... src/Application.i"
 	@echo "... src/Application.s"
+	@echo "... src/AssetManager.o"
+	@echo "... src/AssetManager.i"
+	@echo "... src/AssetManager.s"
 	@echo "... src/AudioManager.o"
 	@echo "... src/AudioManager.i"
 	@echo "... src/AudioManager.s"
@@ -647,6 +698,9 @@ help:
 	@echo "... src/Material.o"
 	@echo "... src/Material.i"
 	@echo "... src/Material.s"
+	@echo "... src/MechExtensions.o"
+	@echo "... src/MechExtensions.i"
+	@echo "... src/MechExtensions.s"
 	@echo "... src/Mesh.o"
 	@echo "... src/Mesh.i"
 	@echo "... src/Mesh.s"

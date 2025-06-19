@@ -9,6 +9,7 @@
 #include "AudioManager.h"
 #include "AudioSystem.h"
 #include "GLTFLoader.h"
+#include "AssetManager.h"
 #include <sstream>
 #include <memory>
 
@@ -39,6 +40,7 @@ private:
     std::shared_ptr<Renderer> renderer_;
     std::shared_ptr<Camera> camera_;
     std::unique_ptr<World> world_;
+    std::unique_ptr<AssetManager> asset_manager_;
     
     // ECS systems
     std::shared_ptr<RenderSystem> render_system_;
@@ -71,6 +73,26 @@ private:
     float camera_height_ = 4.0f;
     bool auto_rotate_camera_ = true;
     
+    // Enhanced camera controls
+    bool mouse_drag_active_ = false;
+    int last_mouse_x_ = 0;
+    int last_mouse_y_ = 0;
+    float camera_sensitivity_ = 0.5f;
+    float movement_speed_ = 5.0f; // Units per second
+    
+    // Free camera mode tracking
+    bool free_camera_mode_ = true;
+    float camera_yaw_ = 0.0f;
+    float camera_pitch_ = 0.0f;
+    
+    // Key states for smooth movement
+    bool key_w_pressed_ = false;
+    bool key_a_pressed_ = false;
+    bool key_s_pressed_ = false;
+    bool key_d_pressed_ = false;
+    bool key_q_pressed_ = false;
+    bool key_e_pressed_ = false;
+    
     // UI state
     bool show_info_ = true;
     bool wireframe_mode_ = false;
@@ -82,6 +104,12 @@ private:
     void spawn_random_entity();
     void trigger_sphere_drop();
     void test_gltf_loader();
+    
+    // Asset management functions
+    void setup_asset_manager();
+    void register_core_assets();
+    void load_test_assets();
+    void create_entities_from_asset(const std::string& asset_id, const glm::vec3& position = glm::vec3(0.0f));
 };
 
 } // namespace CorePulse

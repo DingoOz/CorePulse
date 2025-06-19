@@ -14,6 +14,8 @@ namespace CorePulse {
 class Mesh;
 class Texture;
 class Material;
+struct CP_Walker_Hardpoints;
+struct CP_Damage_Zones;
 
 // Import Vertex struct from Mesh.h
 struct Vertex;
@@ -183,6 +185,10 @@ public:
     std::vector<std::shared_ptr<Mesh>> extract_meshes();
     std::vector<std::shared_ptr<Material>> extract_materials();
     std::vector<std::shared_ptr<Texture>> extract_textures();
+    
+    // Extract mech-specific extensions
+    std::optional<CP_Walker_Hardpoints> extract_hardpoints();
+    std::optional<CP_Damage_Zones> extract_damage_zones();
 
     // Utility functions
     bool is_loaded() const { return loaded_; }

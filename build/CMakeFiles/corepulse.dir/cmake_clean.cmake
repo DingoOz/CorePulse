@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/corepulse.dir/src/Application.cpp.o"
   "CMakeFiles/corepulse.dir/src/Application.cpp.o.d"
+  "CMakeFiles/corepulse.dir/src/AssetManager.cpp.o"
+  "CMakeFiles/corepulse.dir/src/AssetManager.cpp.o.d"
   "CMakeFiles/corepulse.dir/src/AudioManager.cpp.o"
   "CMakeFiles/corepulse.dir/src/AudioManager.cpp.o.d"
   "CMakeFiles/corepulse.dir/src/AudioSystem.cpp.o"
@@ -17,6 +19,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/corepulse.dir/src/Input.cpp.o.d"
   "CMakeFiles/corepulse.dir/src/Material.cpp.o"
   "CMakeFiles/corepulse.dir/src/Material.cpp.o.d"
+  "CMakeFiles/corepulse.dir/src/MechExtensions.cpp.o"
+  "CMakeFiles/corepulse.dir/src/MechExtensions.cpp.o.d"
   "CMakeFiles/corepulse.dir/src/Mesh.cpp.o"
   "CMakeFiles/corepulse.dir/src/Mesh.cpp.o.d"
   "CMakeFiles/corepulse.dir/src/Renderer.cpp.o"
