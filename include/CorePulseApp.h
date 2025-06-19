@@ -8,6 +8,7 @@
 #include "Systems.h"
 #include "AudioManager.h"
 #include "AudioSystem.h"
+#include "GLTFLoader.h"
 #include <sstream>
 #include <memory>
 
@@ -59,10 +60,15 @@ private:
     std::vector<Entity> demo_entities_;
     Entity sphere_entity_ = 0; // Track the falling sphere for reset
     
+    // FlightHelmet glTF resources (multiple meshes/materials)
+    std::vector<std::shared_ptr<Mesh>> gltf_meshes_;
+    std::vector<std::shared_ptr<Material>> gltf_materials_;
+    std::vector<Entity> gltf_entities_;
+    
     // Animation state
     float camera_angle_ = 0.0f;
-    float camera_radius_ = 8.0f;
-    float camera_height_ = 2.0f;
+    float camera_radius_ = 12.0f; // Further back to see both demos
+    float camera_height_ = 4.0f;
     bool auto_rotate_camera_ = true;
     
     // UI state
@@ -75,6 +81,7 @@ private:
     void create_demo_entities();
     void spawn_random_entity();
     void trigger_sphere_drop();
+    void test_gltf_loader();
 };
 
 } // namespace CorePulse
