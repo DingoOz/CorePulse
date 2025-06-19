@@ -1,0 +1,341 @@
+CorePulse - Phase 1 Window Management Demo
+Initializing CorePulse Application...
+Window initialized successfully
+OpenGL Version: 4.6 (Core Profile) Mesa 24.2.8-1ubuntu1~24.04.1
+OpenGL Renderer: Mesa Intel(R) Graphics (ADL GT2)
+CorePulseApp: ECS Demo Initialization
+OpenGL Version: 4.6 (Core Profile) Mesa 24.2.8-1ubuntu1~24.04.1
+GLSL Version: 4.60
+PBR shader compiled successfully
+Renderer initialized successfully
+AudioManager: Initializing SDL2 audio...
+AudioManager: Audio device opened successfully
+  Frequency: 44100 Hz
+  Format: 32784
+  Channels: 2
+  Samples: 4096
+AudioManager: Initialization complete
+Loading audio assets...
+AudioManager: Loading audio clip 'bounce' from assets/audio/bounce.wav
+AudioManager: Loaded WAV file assets/audio/bounce.wav (44100 bytes)
+AudioManager: Successfully loaded audio clip 'bounce'
+AudioManager: Loading audio clip 'collision_metal' from assets/audio/collision_metal.wav
+AudioManager: Loaded WAV file assets/audio/collision_metal.wav (70560 bytes)
+AudioManager: Successfully loaded audio clip 'collision_metal'
+AudioManager: Loading audio clip 'collision_soft' from assets/audio/collision_soft.wav
+AudioManager: Loaded WAV file assets/audio/collision_soft.wav (52920 bytes)
+AudioManager: Successfully loaded audio clip 'collision_soft'
+AudioManager: Loading audio clip 'ambient_hum' from assets/audio/ambient_hum.wav
+AudioManager: Loaded WAV file assets/audio/ambient_hum.wav (882000 bytes)
+AudioManager: Successfully loaded audio clip 'ambient_hum'
+AudioManager: Loading audio clip 'ambient_wind' from assets/audio/ambient_wind.wav
+AudioManager: Loaded WAV file assets/audio/ambient_wind.wav (882000 bytes)
+AudioManager: Successfully loaded audio clip 'ambient_wind'
+Cube mesh valid: 1
+Cube mesh vertex count: 24
+Cube mesh index count: 36
+Initializing ECS World...
+Initializing ECS World...
+ECS World initialized successfully
+ECS World initialized successfully
+Setting up ECS systems...
+RenderSystem: Initialized
+MovementSystem: Initialized
+AutoRotateSystem: Initialized
+LifetimeSystem: Initialized
+PhysicsSystem: Initialized
+AudioSystem: Initialized
+Setting up asset management system...
+AssetManager: Initialized
+AssetManager: Registering core assets...
+AssetManager: Registered ENVIRONMENT asset 'test_cube' -> ../assets/models/cube.gltf
+AssetManager: Registered MECH asset 'light_mech' -> assets/models/walkers/light_mech.gltf
+AssetManager: Registered MECH asset 'medium_mech' -> assets/models/walkers/medium_mech.gltf
+AssetManager: Registered MECH asset 'heavy_mech' -> assets/models/walkers/heavy_mech.gltf
+AssetManager: Registered WEAPON asset 'laser_cannon' -> assets/models/weapons/laser_cannon.gltf
+AssetManager: Registered 5 assets
+AssetManager: Loading test assets...
+AssetManager: Loading MECH asset 'light_mech' from assets/models/walkers/light_mech.gltf
+GLTFLoader: Loading glTF file: assets/models/walkers/light_mech.gltf
+GLTFLoader: Loaded buffer light_mech.bin (3360 bytes)
+GLTFLoader: Document validation passed
+GLTFLoader: Successfully loaded glTF file
+GLTFLoader: Extracting 1 meshes...
+GLTFLoader: Created mesh 'Light Mech Mesh' with 96 vertices and 144 indices
+GLTFLoader: Successfully extracted 1 mesh objects
+GLTFLoader: Extracting 1 materials...
+GLTFLoader: Extracting 0 textures...
+GLTFLoader: Successfully extracted 0 textures
+GLTFLoader: Created material 'Light Mech Material'
+GLTFLoader: Successfully extracted 1 materials
+GLTFLoader: Extracting 0 textures...
+GLTFLoader: Successfully extracted 0 textures
+AssetManager: Extracting mech extensions for 'light_mech'
+GLTFLoader: Found CP_walker_hardpoints extension
+Loaded hardpoint: Left Arm Energy Hardpoint (ENERGY, MEDIUM)
+Loaded hardpoint: Right Arm Ballistic Hardpoint (BALLISTIC, MEDIUM)
+AssetManager: Found 2 hardpoints
+GLTFLoader: Found CP_damage_zones extension
+Loaded damage zone: Head (HEAD, 9 armor, 3 internal)
+Loaded damage zone: Center Torso (CENTER_TORSO, 16 armor, 12 internal)
+Loaded damage zone: Left Arm (LEFT_ARM, 9.6 armor, 6.4 internal)
+Loaded damage zone: Right Arm (RIGHT_ARM, 9.6 armor, 6.4 internal)
+AssetManager: Found 4 damage zones
+AssetManager: Generated mech config for 'light_mech' (4.42 tons)
+AssetManager: Successfully loaded 'light_mech' - 1 meshes, 1 materials
+AssetManager: Successfully loaded Light Mech
+AssetManager: Creating entities from asset 'light_mech' at position (-12, 0, 0)
+  Created entity for mesh 0 (light_mech_part_0)
+AssetManager: Created 1 entities from asset 'light_mech'
+AssetManager: Loading MECH asset 'medium_mech' from assets/models/walkers/medium_mech.gltf
+GLTFLoader: Loading glTF file: assets/models/walkers/medium_mech.gltf
+GLTFLoader: Loaded buffer light_mech.bin (3360 bytes)
+GLTFLoader: Loaded buffer medium_mech.bin (3360 bytes)
+GLTFLoader: Document validation passed
+GLTFLoader: Successfully loaded glTF file
+GLTFLoader: Extracting 2 meshes...
+GLTFLoader: Created mesh 'Light Mech Mesh' with 96 vertices and 144 indices
+GLTFLoader: Created mesh 'Medium Mech Mesh' with 96 vertices and 144 indices
+GLTFLoader: Successfully extracted 2 mesh objects
+GLTFLoader: Extracting 2 materials...
+GLTFLoader: Extracting 0 textures...
+GLTFLoader: Successfully extracted 0 textures
+GLTFLoader: Created material 'Light Mech Material'
+GLTFLoader: Created material 'Medium Mech Material'
+GLTFLoader: Successfully extracted 2 materials
+GLTFLoader: Extracting 0 textures...
+GLTFLoader: Successfully extracted 0 textures
+AssetManager: Extracting mech extensions for 'medium_mech'
+GLTFLoader: Found CP_walker_hardpoints extension
+Loaded hardpoint: Left Arm Energy Hardpoint (ENERGY, MEDIUM)
+Loaded hardpoint: Right Arm Ballistic Hardpoint (BALLISTIC, MEDIUM)
+AssetManager: Found 2 hardpoints
+GLTFLoader: Found CP_damage_zones extension
+Loaded damage zone: Head (HEAD, 9 armor, 3 internal)
+Loaded damage zone: Center Torso (CENTER_TORSO, 20 armor, 15 internal)
+Loaded damage zone: Left Arm (LEFT_ARM, 12 armor, 8 internal)
+Loaded damage zone: Right Arm (RIGHT_ARM, 12 armor, 8 internal)
+AssetManager: Found 4 damage zones
+AssetManager: Generated mech config for 'medium_mech' (5.3 tons)
+AssetManager: Successfully loaded 'medium_mech' - 2 meshes, 2 materials
+AssetManager: Successfully loaded Medium Mech
+AssetManager: Creating entities from asset 'medium_mech' at position (-4, 0, 0)
+  Created entity for mesh 0 (medium_mech_part_0)
+  Created entity for mesh 1 (medium_mech_part_1)
+AssetManager: Created 2 entities from asset 'medium_mech'
+AssetManager: Loading MECH asset 'heavy_mech' from assets/models/walkers/heavy_mech.gltf
+GLTFLoader: Loading glTF file: assets/models/walkers/heavy_mech.gltf
+GLTFLoader: Loaded buffer light_mech.bin (3360 bytes)
+GLTFLoader: Loaded buffer medium_mech.bin (3360 bytes)
+GLTFLoader: Loaded buffer heavy_mech.bin (3360 bytes)
+GLTFLoader: Document validation passed
+GLTFLoader: Successfully loaded glTF file
+GLTFLoader: Extracting 3 meshes...
+GLTFLoader: Created mesh 'Light Mech Mesh' with 96 vertices and 144 indices
+GLTFLoader: Created mesh 'Medium Mech Mesh' with 96 vertices and 144 indices
+GLTFLoader: Created mesh 'Heavy Mech Mesh' with 96 vertices and 144 indices
+GLTFLoader: Successfully extracted 3 mesh objects
+GLTFLoader: Extracting 3 materials...
+GLTFLoader: Extracting 0 textures...
+GLTFLoader: Successfully extracted 0 textures
+GLTFLoader: Created material 'Light Mech Material'
+GLTFLoader: Created material 'Medium Mech Material'
+GLTFLoader: Created material 'Heavy Mech Material'
+GLTFLoader: Successfully extracted 3 materials
+GLTFLoader: Extracting 0 textures...
+GLTFLoader: Successfully extracted 0 textures
+AssetManager: Extracting mech extensions for 'heavy_mech'
+GLTFLoader: Found CP_walker_hardpoints extension
+Loaded hardpoint: Left Arm Energy Hardpoint (ENERGY, MEDIUM)
+Loaded hardpoint: Right Arm Ballistic Hardpoint (BALLISTIC, LARGE)
+AssetManager: Found 2 hardpoints
+GLTFLoader: Found CP_damage_zones extension
+Loaded damage zone: Head (HEAD, 9 armor, 3 internal)
+Loaded damage zone: Center Torso (CENTER_TORSO, 26 armor, 19.5 internal)
+Loaded damage zone: Left Arm (LEFT_ARM, 15.6 armor, 10.4 internal)
+Loaded damage zone: Right Arm (RIGHT_ARM, 15.6 armor, 10.4 internal)
+AssetManager: Found 4 damage zones
+AssetManager: Generated mech config for 'heavy_mech' (6.62 tons)
+AssetManager: Successfully loaded 'heavy_mech' - 3 meshes, 3 materials
+AssetManager: Successfully loaded Heavy Mech
+AssetManager: Creating entities from asset 'heavy_mech' at position (4, 0, 0)
+  Created entity for mesh 0 (heavy_mech_part_0)
+  Created entity for mesh 1 (heavy_mech_part_1)
+  Created entity for mesh 2 (heavy_mech_part_2)
+AssetManager: Created 3 entities from asset 'heavy_mech'
+AssetManager: Loading WEAPON asset 'laser_cannon' from assets/models/weapons/laser_cannon.gltf
+GLTFLoader: Loading glTF file: assets/models/weapons/laser_cannon.gltf
+GLTFLoader Error: Could not open buffer file: assets/models/weapons/light_mech.bin
+AssetManager Error: Failed to load GLTF file: Could not open buffer file: assets/models/weapons/light_mech.bin
+AssetManager: Loading ENVIRONMENT asset 'test_cube' from ../assets/models/cube.gltf
+GLTFLoader: Loading glTF file: ../assets/models/cube.gltf
+GLTFLoader Error: Could not open buffer file: ../assets/models/light_mech.bin
+AssetManager Error: Failed to load GLTF file: Could not open buffer file: ../assets/models/light_mech.bin
+AssetManager Stats: 3 assets, 6 meshes, 6 materials, 0 textures
+AssetManager: Setup complete
+
+=== AssetManager Summary ===
+Registered assets: 5
+Loaded assets: 3
+
+By type:
+  ENVIRONMENT: 1
+  MECH: 3
+  WEAPON: 1
+
+Loaded assets:
+  heavy_mech (MECH) - 3 meshes, 3 materials
+  medium_mech (MECH) - 2 meshes, 2 materials
+  light_mech (MECH) - 1 meshes, 1 materials
+============================
+
+Setting up terrain system...
+Terrain: Generating 32x32 terrain with scale 2
+Terrain: Generation complete
+Terrain: Created 64x64 battlefield terrain
+Testing glTF loader...
+GLTFLoader: Loading glTF file: assets/models/walkers/heavy_mech.gltf
+GLTFLoader: Loaded buffer heavy_mech.bin (3360 bytes)
+GLTFLoader: Document validation passed
+GLTFLoader: Successfully loaded glTF file
+Successfully loaded heavy_mech.gltf!
+GLTFLoader: Found CP_walker_hardpoints extension
+Loaded hardpoint: Left Arm Energy Hardpoint (ENERGY, MEDIUM)
+Loaded hardpoint: Right Arm Ballistic Hardpoint (BALLISTIC, LARGE)
+GLTFLoader: Found CP_damage_zones extension
+Loaded damage zone: Head (HEAD, 9 armor, 3 internal)
+Loaded damage zone: Center Torso (CENTER_TORSO, 26 armor, 19.5 internal)
+Loaded damage zone: Left Arm (LEFT_ARM, 15.6 armor, 10.4 internal)
+Loaded damage zone: Right Arm (RIGHT_ARM, 15.6 armor, 10.4 internal)
+Found 2 hardpoints in mech model
+  - Left Arm Energy Hardpoint (heavy_mech_arm_energy_1)
+  - Right Arm Ballistic Hardpoint (heavy_mech_arm_ballistic_1)
+Found 4 damage zones in mech model
+  - Head (heavy_mech_head)
+  - Center Torso (heavy_mech_center_torso)
+  - Left Arm (heavy_mech_left_arm)
+  - Right Arm (heavy_mech_right_arm)
+GLTFLoader: Extracting 1 meshes...
+GLTFLoader: Created mesh 'Heavy Mech Mesh' with 96 vertices and 144 indices
+GLTFLoader: Successfully extracted 1 mesh objects
+GLTFLoader: Extracting 1 materials...
+GLTFLoader: Extracting 0 textures...
+GLTFLoader: Successfully extracted 0 textures
+GLTFLoader: Created material 'Heavy Mech Material'
+GLTFLoader: Successfully extracted 1 materials
+Extracted 1 meshes and 1 materials from glTF file
+Creating 1 Heavy Mech mesh entities...
+Using GLTF material 0 'Heavy Mech Material'
+Created Heavy Mech part 0 with 96 vertices and 144 indices
+Heavy Mech model loaded successfully with 1 parts!
+Creating demo entities...
+Created 11 demo entities (including ambient audio)
+Watch the red sphere fall and bounce on the blue platform!
+Listen for velocity-based collision sounds and ambient background audio!
+Entity count: 11
+Enhanced Camera Controls:
+  T - Toggle camera mode (Free/Orbital)
+  
+  FREE CAMERA MODE (default):
+    WASD - 3D movement (W/S: forward/back, A/D: strafe left/right)
+    Q/E  - Move up/down in world space
+    Mouse drag - Look around (FPS-style)
+  
+  ORBITAL CAMERA MODE:
+    WASD - Orbit controls (W/S: zoom, A/D: rotate)
+    Q/E  - Move camera up/down
+    P - Toggle auto rotation
+  
+  UNIVERSAL:
+    Mouse wheel - Zoom in/out
+    Arrow keys - Step camera rotation
+
+Other Controls:
+  ESC - Quit
+  F11 - Toggle Fullscreen
+  I   - Toggle Info Display
+  R/J - Toggle Wireframe Mode
+  SPACE - Drop sphere (reset physics demo)
+  
+  TERRAIN CONTROLS:
+    L - Cycle terrain types (Battlefield/Hills/Plains/Mountains/Desert)
+    ; - Regenerate current terrain
+  
+  DEBUG:
+    H - Move mechs to origin for debugging
+    K - Move primary mech in front of camera
+
+Demo features:
+  - Physics sphere (red, bouncing on blue platform)
+  - Mech formation (left side, with hardpoints and damage zones)
+  - 3D spatial audio with collision sounds
+Application initialized successfully
+Starting main loop...
+AudioManager: Playing 3D sound 'ambient_hum' (ID: 1, velocity: 0)
+AudioSystem: Started ambient audio 'ambient_hum' for entity 9989 (source ID: 1)
+Rendering frame 1, angle: 0.0291173
+Camera position: (0, 15, 40)
+Camera radius: 12
+ECS entities: 11
+RenderSystem: Processing entity 9990
+RenderSystem: Successfully rendered entity 9990
+RenderSystem: Processing entity 9991
+RenderSystem: Successfully rendered entity 9991
+RenderSystem: Processing entity 9993
+RenderSystem: Successfully rendered entity 9993
+ECS rendering complete
+Debug yellow cube at (2, 4, 0)
+Starting FlightHelmet PBR rendering for 1 parts
+  Rendering part 0 - PBR shader valid: 1, material: 'Heavy Mech Material'
+    Using material color 0: (0.8, 0.2, 0.2)
+FlightHelmet rendered with 1 parts at position (0, 4, 0) using PBR materials, scale 5x
+AudioManager: Playing 3D sound 'bounce' (ID: 2, velocity: 8.89384)
+AudioSystem: Triggered collision audio 'bounce' for entity 9991 (impact: 8.89384, volume: 0.755754, pitch: -0.0331848)
+Rendering frame 61, angle: 42.8325
+Camera position: (0, 15, 40)
+Camera radius: 12
+ECS entities: 11
+RenderSystem: Processing entity 9990
+RenderSystem: Successfully rendered entity 9990
+RenderSystem: Processing entity 9991
+RenderSystem: Successfully rendered entity 9991
+RenderSystem: Processing entity 9993
+RenderSystem: Successfully rendered entity 9993
+ECS rendering complete
+Debug yellow cube at (2, 4, 0)
+Starting FlightHelmet PBR rendering for 1 parts
+  Rendering part 0 - PBR shader valid: 1, material: 'Heavy Mech Material'
+    Using material color 0: (0.8, 0.2, 0.2)
+FlightHelmet rendered with 1 parts at position (0, 4, 0) using PBR materials, scale 5x
+Camera drag started with Left mouse button
+Rendering frame 121, angle: 77.069
+Camera position: (0, 15, 40)
+Camera radius: 12
+ECS entities: 11
+RenderSystem: Processing entity 9990
+RenderSystem: Successfully rendered entity 9990
+RenderSystem: Processing entity 9991
+RenderSystem: Successfully rendered entity 9991
+RenderSystem: Processing entity 9993
+RenderSystem: Successfully rendered entity 9993
+ECS rendering complete
+Debug yellow cube at (2, 4, 0)
+Starting FlightHelmet PBR rendering for 1 parts
+  Rendering part 0 - PBR shader valid: 1, material: 'Heavy Mech Material'
+    Using material color 0: (0.8, 0.2, 0.2)
+FlightHelmet rendered with 1 parts at position (0, 4, 0) using PBR materials, scale 5x
+AudioManager: Playing 3D sound 'bounce' (ID: 3, velocity: 5.06171)
+AudioSystem: Triggered collision audio 'bounce' for entity 9991 (impact: 5.06171, volume: 0.602468, pitch: -0.148149)
+AudioManager: Playing 3D sound 'bounce' (ID: 4, velocity: 3.17301)
+AudioSystem: Triggered collision audio 'bounce' for entity 9991 (impact: 3.17301, volume: 0.52692, pitch: -0.20481)
+Main loop ended
+Shutting down application...
+CorePulseApp: Shutting down
+Shutting down ECS World...
+ECS World shutdown complete
+AudioManager: Shutting down...
+AudioManager: Stopped all sounds
+AudioManager: Shutdown complete
+Renderer shutdown complete
+Application shutdown complete
+Application completed successfully

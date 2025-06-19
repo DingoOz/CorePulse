@@ -10,6 +10,7 @@
 #include "AudioSystem.h"
 #include "GLTFLoader.h"
 #include "AssetManager.h"
+#include "Terrain.h"
 #include <sstream>
 #include <memory>
 
@@ -41,6 +42,10 @@ private:
     std::shared_ptr<Camera> camera_;
     std::unique_ptr<World> world_;
     std::unique_ptr<AssetManager> asset_manager_;
+    
+    // Terrain system
+    std::unique_ptr<Terrain> terrain_;
+    Entity terrain_entity_ = 0;
     
     // ECS systems
     std::shared_ptr<RenderSystem> render_system_;
@@ -110,6 +115,11 @@ private:
     void register_core_assets();
     void load_test_assets();
     void create_entities_from_asset(const std::string& asset_id, const glm::vec3& position = glm::vec3(0.0f));
+    
+    // Terrain functions
+    void setup_terrain();
+    void regenerate_terrain();
+    void cycle_terrain_type();
 };
 
 } // namespace CorePulse

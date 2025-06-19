@@ -44,11 +44,11 @@ bool CorePulseApp::on_initialize() {
     audio_manager_->load_audio_clip("assets/audio/ambient_hum.wav", "ambient_hum");
     audio_manager_->load_audio_clip("assets/audio/ambient_wind.wav", "ambient_wind");
     
-    // Initialize camera
+    // Initialize camera - positioned to see the smaller terrain clearly
     camera_ = std::make_shared<Camera>();
-    camera_->set_position(glm::vec3(0.0f, 4.0f, 12.0f)); // Higher and further back to see both demos
-    camera_->set_target(glm::vec3(0.0f, 2.0f, 0.0f)); // Look at a point between the ground and helmet
-    camera_->set_perspective(45.0f, get_window().get_aspect_ratio(), 0.1f, 100.0f);
+    camera_->set_position(glm::vec3(0.0f, 15.0f, 40.0f)); // High and back to see 64x64 terrain
+    camera_->set_target(glm::vec3(0.0f, 2.0f, 0.0f)); // Look at terrain center
+    camera_->set_perspective(45.0f, get_window().get_aspect_ratio(), 0.1f, 500.0f);
     
     // Create test meshes - make cube larger for better visibility
     cube_mesh_ = std::make_shared<Mesh>(Mesh::create_cube(2.0f));
@@ -73,6 +73,10 @@ bool CorePulseApp::on_initialize() {
         // Setup asset management system
         std::cout << "Setting up asset management system...\n";
         setup_asset_manager();
+        
+        // Setup terrain system
+        std::cout << "Setting up terrain system...\n";
+        setup_terrain();
         
         // Test glTF loader
         std::cout << "Testing glTF loader...\n";
@@ -111,8 +115,14 @@ bool CorePulseApp::on_initialize() {
     std::cout << "  I   - Toggle Info Display\n";
     std::cout << "  R/J - Toggle Wireframe Mode\n";
     std::cout << "  SPACE - Drop sphere (reset physics demo)\n";
-    std::cout << "  H - Move mechs to origin for debugging\n";
-    std::cout << "  K - Move primary mech in front of camera\n";
+    std::cout << "  \n";
+    std::cout << "  TERRAIN CONTROLS:\n";
+    std::cout << "    L - Cycle terrain types (Battlefield/Hills/Plains/Mountains/Desert)\n";
+    std::cout << "    ; - Regenerate current terrain\n";
+    std::cout << "  \n";
+    std::cout << "  DEBUG:\n";
+    std::cout << "    H - Move mechs to origin for debugging\n";
+    std::cout << "    K - Move primary mech in front of camera\n";
     std::cout << "\nDemo features:\n";
     std::cout << "  - Physics sphere (red, bouncing on blue platform)\n";
     std::cout << "  - Mech formation (left side, with hardpoints and damage zones)\n";
@@ -521,6 +531,16 @@ void CorePulseApp::on_key_pressed(SDL_Scancode key) {
                 }
                 std::cout << "Moved FlightHelmet to (0,0,-5) - should be directly in front of camera" << std::endl;
             }
+            break;
+            
+        case SDL_SCANCODE_L:
+            // Cycle terrain types
+            cycle_terrain_type();
+            break;
+            
+        case SDL_SCANCODE_SEMICOLON:
+            // Regenerate current terrain
+            regenerate_terrain();
             break;
             
         default:
@@ -1222,6 +1242,96 @@ void CorePulseApp::create_entities_from_asset(const std::string& asset_id, const
     }
     
     std::cout << "AssetManager: Created " << asset->meshes.size() << " entities from asset '" << asset_id << "'" << std::endl;
+}
+
+void CorePulseApp::setup_terrain() {
+    // Generate a default battlefield terrain
+    TerrainConfig config = LandscapeGenerator::create_battlefield();
+    terrain_ = std::make_unique<Terrain>(config);
+    
+    // Create terrain entity
+    if (world_) {
+        terrain_entity_ = world_->create_entity();
+        
+        // Add terrain components
+        world_->add_component(terrain_entity_, Transform{glm::vec3(0.0f, 0.0f, 0.0f)});
+        
+        Renderable terrain_renderable;
+        terrain_renderable.mesh = terrain_->get_mesh();
+        terrain_renderable.color = glm::vec3(terrain_->get_material()->base_color_factor);
+        terrain_renderable.visible = true;
+        world_->add_component(terrain_entity_, terrain_renderable);
+        
+        world_->add_component(terrain_entity_, Tag{"Default_Terrain"});
+        
+        demo_entities_.push_back(terrain_entity_);
+        
+        // Register terrain entity with render system
+        if (render_system_) {
+            render_system_->entities.insert(terrain_entity_);
+        }
+        
+        glm::vec2 world_size = terrain_->get_world_size();
+        std::cout << "Terrain: Created " << world_size.x << "x" << world_size.y 
+                  << " battlefield terrain" << std::endl;
+    }
+}
+
+void CorePulseApp::regenerate_terrain() {
+    if (!terrain_ || !world_) return;
+    
+    // Regenerate terrain with current config
+    terrain_->generate();
+    
+    // Update the entity's mesh (material stays the same)
+    if (world_->is_valid_entity(terrain_entity_)) {
+        auto& renderable = world_->get_component<Renderable>(terrain_entity_);
+        renderable.mesh = terrain_->get_mesh();
+    }
+    
+    std::cout << "Terrain: Regenerated with current settings" << std::endl;
+}
+
+void CorePulseApp::cycle_terrain_type() {
+    if (!terrain_ || !world_) return;
+    
+    // Cycle through different terrain types
+    static int terrain_type = 0;
+    TerrainConfig new_config;
+    
+    switch (terrain_type % 5) {
+        case 0:
+            new_config = LandscapeGenerator::create_battlefield();
+            std::cout << "Terrain: Switching to Battlefield" << std::endl;
+            break;
+        case 1:
+            new_config = LandscapeGenerator::create_rolling_hills();
+            std::cout << "Terrain: Switching to Rolling Hills" << std::endl;
+            break;
+        case 2:
+            new_config = LandscapeGenerator::create_flat_plains();
+            std::cout << "Terrain: Switching to Flat Plains" << std::endl;
+            break;
+        case 3:
+            new_config = LandscapeGenerator::create_mountainous();
+            std::cout << "Terrain: Switching to Mountainous" << std::endl;
+            break;
+        case 4:
+            new_config = LandscapeGenerator::create_desert_dunes();
+            std::cout << "Terrain: Switching to Desert Dunes" << std::endl;
+            break;
+    }
+    
+    terrain_->regenerate(new_config);
+    
+    // Update the entity's mesh and color
+    if (world_->is_valid_entity(terrain_entity_)) {
+        auto& renderable = world_->get_component<Renderable>(terrain_entity_);
+        renderable.mesh = terrain_->get_mesh();
+        renderable.color = glm::vec3(terrain_->get_material()->base_color_factor);
+    }
+    
+    terrain_type++;
 }
 
 } // namespace CorePulse

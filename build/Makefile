@@ -557,6 +557,30 @@ src/Systems.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Systems.cpp.s
 .PHONY : src/Systems.cpp.s
 
+src/Terrain.o: src/Terrain.cpp.o
+.PHONY : src/Terrain.o
+
+# target to build an object file
+src/Terrain.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Terrain.cpp.o
+.PHONY : src/Terrain.cpp.o
+
+src/Terrain.i: src/Terrain.cpp.i
+.PHONY : src/Terrain.i
+
+# target to preprocess a source file
+src/Terrain.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Terrain.cpp.i
+.PHONY : src/Terrain.cpp.i
+
+src/Terrain.s: src/Terrain.cpp.s
+.PHONY : src/Terrain.s
+
+# target to generate assembly for a file
+src/Terrain.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Terrain.cpp.s
+.PHONY : src/Terrain.cpp.s
+
 src/Texture.o: src/Texture.cpp.o
 .PHONY : src/Texture.o
 
@@ -713,6 +737,9 @@ help:
 	@echo "... src/Systems.o"
 	@echo "... src/Systems.i"
 	@echo "... src/Systems.s"
+	@echo "... src/Terrain.o"
+	@echo "... src/Terrain.i"
+	@echo "... src/Terrain.s"
 	@echo "... src/Texture.o"
 	@echo "... src/Texture.i"
 	@echo "... src/Texture.s"
