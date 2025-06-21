@@ -11,6 +11,7 @@
     "glew",
     "glm",
     "nlohmann-json",
+    "lua",
     {
       "name": "gtest",
       "$comment": "For unit testing"

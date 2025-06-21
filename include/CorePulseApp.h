@@ -11,6 +11,8 @@
 #include "GLTFLoader.h"
 #include "AssetManager.h"
 #include "Terrain.h"
+#include "MissionSystem.h"
+#include "MissionLoader.h"
 #include <sstream>
 #include <memory>
 
@@ -54,6 +56,7 @@ private:
     std::shared_ptr<LifetimeSystem> lifetime_system_;
     std::shared_ptr<PhysicsSystem> physics_system_;
     std::shared_ptr<AudioSystem> audio_system_;
+    std::shared_ptr<MissionSystem> mission_system_;
     
     // Audio system
     std::shared_ptr<AudioManager> audio_manager_;

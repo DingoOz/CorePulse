@@ -1,0 +1,104 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "CorePulse Mission Editor",
+    "copyright": "CorePulse Test Mission"
+  },
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Test Mission Scene",
+      "nodes": [0, 1, 2]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "PlayerStart",
+      "translation": [0.0, 0.0, 0.0],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0]
+    },
+    {
+      "name": "Target1",
+      "translation": [10.0, 0.0, 10.0],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0]
+    },
+    {
+      "name": "Target2",
+      "translation": [-10.0, 0.0, 10.0],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0]
+    }
+  ],
+  "extensions": {
+    "CP_mission_data": {
+      "name": "First Strike",
+      "description": "Eliminate all enemy targets in the training area. This is your first combat mission.",
+      "time_limit": 300.0,
+      "require_all_objectives": true,
+      "success_message": "Mission accomplished! All targets eliminated.",
+      "failure_message": "Mission failed. You must eliminate all targets to succeed.",
+      "author": "CorePulse Development Team",
+      "version": "1.0",
+      "tags": ["tutorial", "elimination", "training"],
+      "lua_init_script": "print('Mission started: First Strike')\nprint('Eliminate all enemy targets to complete the mission')",
+      "lua_update_script": "-- Update mission state every frame\nlocal elapsed = get_mission_elapsed_time()\nif elapsed > 60 then\n  -- After 1 minute, show a hint\n  if not hint_shown then\n    print('Hint: Use your weapons to destroy the red targets')\n    hint_shown = true\n  end\nend",
+      "lua_cleanup_script": "print('Mission cleanup completed')",
+      "objectives": [
+        {
+          "id": "eliminate_all_targets",
+          "type": "elimination",
+          "description": "Destroy all enemy targets",
+          "target_nodes": [1, 2],
+          "is_optional": false,
+          "target_value": 2.0,
+          "on_start_script": "print('Objective started: Eliminate all targets')",
+          "on_update_script": "-- Check elimination progress",
+          "on_complete_script": "print('All targets eliminated!')",
+          "on_fail_script": "print('Failed to eliminate all targets')"
+        }
+      ],
+      "spawn_points": [
+        {
+          "name": "player_start",
+          "position": [0.0, 0.0, 0.0],
+          "rotation": [0.0, 0.0, 0.0],
+          "entity_type": "player_mech",
+          "is_player_spawn": true,
+          "properties": {
+            "loadout": "basic_weapons",
+            "health": "100"
+          }
+        },
+        {
+          "name": "target_spawn_1",
+          "position": [10.0, 0.0, 10.0],
+          "rotation": [0.0, 180.0, 0.0],
+          "entity_type": "enemy_target",
+          "is_player_spawn": false,
+          "properties": {
+            "health": "50",
+            "armor": "light"
+          }
+        },
+        {
+          "name": "target_spawn_2",
+          "position": [-10.0, 0.0, 10.0],
+          "rotation": [0.0, 180.0, 0.0],
+          "entity_type": "enemy_target",
+          "is_player_spawn": false,
+          "properties": {
+            "health": "50",
+            "armor": "light"
+          }
+        }
+      ],
+      "custom_properties": {
+        "difficulty": "easy",
+        "environment": "training_ground",
+        "weather": "clear"
+      }
+    }
+  }
+}

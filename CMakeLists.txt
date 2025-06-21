@@ -41,6 +41,22 @@ pkg_check_modules(GLEW REQUIRED glew)
 find_package(OpenGL REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 
+# Try to find Lua
+find_package(Lua)
+if(NOT LUA_FOUND)
+    # Manual fallback for system-installed Lua
+    find_path(LUA_INCLUDE_DIR lua.h PATHS /usr/include/lua5.3 /usr/include/lua5.4 /usr/include/lua /usr/local/include/lua5.3 /usr/local/include/lua5.4)
+    find_library(LUA_LIBRARIES NAMES lua5.3 lua5.4 lua liblua PATHS /usr/lib /usr/local/lib)
+    
+    if(LUA_INCLUDE_DIR AND LUA_LIBRARIES)
+        set(LUA_FOUND TRUE)
+        message(STATUS "Found Lua (manual): ${LUA_LIBRARIES}")
+    else()
+        message(WARNING "Lua not found - mission system will be disabled")
+        set(LUA_FOUND FALSE)
+    endif()
+endif()
+
 # Include directories
 include_directories(include)
 include_directories(external/glm)
@@ -67,11 +83,23 @@ target_link_libraries(corepulse
         nlohmann_json::nlohmann_json
 )
 
+# Add Lua linking if found
+if(LUA_FOUND)
+    target_link_libraries(corepulse PRIVATE ${LUA_LIBRARIES})
+    target_compile_definitions(corepulse PRIVATE COREPULSE_HAS_LUA)
+endif()
+
 # Add include directories
 target_include_directories(corepulse PRIVATE 
     ${SDL2_INCLUDE_DIRS}
     ${GLEW_INCLUDE_DIRS}
 )
+
+# Add Lua include directories if found
+if(LUA_FOUND)
+    target_include_directories(corepulse PRIVATE ${LUA_INCLUDE_DIR})
+endif()
+
 target_compile_options(corepulse PRIVATE 
     ${SDL2_CFLAGS_OTHER}
     ${GLEW_CFLAGS_OTHER}
