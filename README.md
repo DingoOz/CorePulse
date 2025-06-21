@@ -1,5 +1,5 @@
-# CorePulse
 
+# CorePulse
 ![CorePulse Logo](CorePulse.jpg)
 
 **CorePulse** is an open-source mech combat game inspired by classic 1990s titles, built with modern C++20/C++23 and OpenGL 4.3+. Experience authentic giant robot combat with deep customization, immersive 3D audio, and tactical gameplay.
@@ -241,6 +241,8 @@ The current build includes several interactive demos:
 - Real-time terrain switching and generation
 - Integrated physics collision
 
----
 
-**CorePulse** - Experience the authentic thrill of giant robot combat! 🤖⚡
+
+
+
+
