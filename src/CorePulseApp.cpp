@@ -165,6 +165,11 @@ void CorePulseApp::on_update(float delta_time) {
         audio_system_->update(delta_time);
     }
     
+    // Update mission system
+    if (mission_system_) {
+        mission_system_->update(delta_time);
+    }
+    
     // Update window title with FPS info
     if (show_info_) {
         update_window_title();
@@ -356,6 +361,7 @@ void CorePulseApp::on_shutdown() {
     lifetime_system_.reset();
     physics_system_.reset();
     audio_system_.reset();
+    mission_system_.reset();
     
     // Clean up audio
     if (audio_manager_) {
@@ -814,6 +820,17 @@ void CorePulseApp::setup_ecs_systems() {
     
     // Connect physics system to audio system for collision sounds
     physics_system_->set_audio_system(audio_system_.get());
+    
+    // Initialize mission system
+    mission_system_ = std::make_shared<MissionSystem>();
+    mission_system_->set_world(world_.get());
+    
+    // Create mission loader
+    auto mission_loader = std::make_shared<MissionLoader>();
+    mission_system_->set_mission_loader(mission_loader);
+    mission_system_->init();
+    
+    std::cout << "Mission system initialized successfully" << std::endl;
 }
 
 void CorePulseApp::create_demo_entities() {

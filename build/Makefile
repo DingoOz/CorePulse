@@ -485,6 +485,54 @@ src/Mesh.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/Mesh.cpp.s
 .PHONY : src/Mesh.cpp.s
 
+src/MissionLoader.o: src/MissionLoader.cpp.o
+.PHONY : src/MissionLoader.o
+
+# target to build an object file
+src/MissionLoader.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/MissionLoader.cpp.o
+.PHONY : src/MissionLoader.cpp.o
+
+src/MissionLoader.i: src/MissionLoader.cpp.i
+.PHONY : src/MissionLoader.i
+
+# target to preprocess a source file
+src/MissionLoader.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/MissionLoader.cpp.i
+.PHONY : src/MissionLoader.cpp.i
+
+src/MissionLoader.s: src/MissionLoader.cpp.s
+.PHONY : src/MissionLoader.s
+
+# target to generate assembly for a file
+src/MissionLoader.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/MissionLoader.cpp.s
+.PHONY : src/MissionLoader.cpp.s
+
+src/MissionSystem.o: src/MissionSystem.cpp.o
+.PHONY : src/MissionSystem.o
+
+# target to build an object file
+src/MissionSystem.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/MissionSystem.cpp.o
+.PHONY : src/MissionSystem.cpp.o
+
+src/MissionSystem.i: src/MissionSystem.cpp.i
+.PHONY : src/MissionSystem.i
+
+# target to preprocess a source file
+src/MissionSystem.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/MissionSystem.cpp.i
+.PHONY : src/MissionSystem.cpp.i
+
+src/MissionSystem.s: src/MissionSystem.cpp.s
+.PHONY : src/MissionSystem.s
+
+# target to generate assembly for a file
+src/MissionSystem.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/MissionSystem.cpp.s
+.PHONY : src/MissionSystem.cpp.s
+
 src/Renderer.o: src/Renderer.cpp.o
 .PHONY : src/Renderer.o
 
@@ -728,6 +776,12 @@ help:
 	@echo "... src/Mesh.o"
 	@echo "... src/Mesh.i"
 	@echo "... src/Mesh.s"
+	@echo "... src/MissionLoader.o"
+	@echo "... src/MissionLoader.i"
+	@echo "... src/MissionLoader.s"
+	@echo "... src/MissionSystem.o"
+	@echo "... src/MissionSystem.i"
+	@echo "... src/MissionSystem.s"
 	@echo "... src/Renderer.o"
 	@echo "... src/Renderer.i"
 	@echo "... src/Renderer.s"
