@@ -123,9 +123,17 @@ bool CorePulseApp::on_initialize() {
     std::cout << "  DEBUG:\n";
     std::cout << "    H - Move mechs to origin for debugging\n";
     std::cout << "    K - Move primary mech in front of camera\n";
+    std::cout << "\n";
+    std::cout << "  MECH CONTROL (NEW!):\n";
+    std::cout << "    WASD - Control the Light Mech (forward/back/strafe)\n";
+    std::cout << "    Mouse - Independent torso rotation (look around)\n";
+    std::cout << "    Shift - Boost/Run (1.5x speed)\n";
+    std::cout << "    Ctrl - Emergency brake\n";
+    std::cout << "    Note: Torso can twist ±90° from leg direction\n";
     std::cout << "\nDemo features:\n";
     std::cout << "  - Physics sphere (red, bouncing on blue platform)\n";
-    std::cout << "  - Mech formation (left side, with hardpoints and damage zones)\n";
+    std::cout << "  - Controllable mech with authentic movement (Light Mech on left)\n";
+    std::cout << "  - Independent torso rotation and leg animation\n";
     std::cout << "  - 3D spatial audio with collision sounds\n";
     
     return true;
@@ -168,6 +176,11 @@ void CorePulseApp::on_update(float delta_time) {
     // Update mission system
     if (mission_system_) {
         mission_system_->update(delta_time);
+    }
+    
+    // Update mech movement system
+    if (mech_movement_system_) {
+        mech_movement_system_->update(delta_time);
     }
     
     // Update window title with FPS info
@@ -362,6 +375,7 @@ void CorePulseApp::on_shutdown() {
     physics_system_.reset();
     audio_system_.reset();
     mission_system_.reset();
+    mech_movement_system_.reset();
     
     // Clean up audio
     if (audio_manager_) {
@@ -831,6 +845,14 @@ void CorePulseApp::setup_ecs_systems() {
     mission_system_->init();
     
     std::cout << "Mission system initialized successfully" << std::endl;
+    
+    // Initialize mech movement system
+    mech_movement_system_ = std::make_shared<MechMovementSystem>();
+    mech_movement_system_->set_world(world_.get());
+    mech_movement_system_->set_input(&get_input());
+    mech_movement_system_->init();
+    
+    std::cout << "Mech movement system initialized successfully" << std::endl;
 }
 
 void CorePulseApp::create_demo_entities() {
@@ -1251,6 +1273,72 @@ void CorePulseApp::create_entities_from_asset(const std::string& asset_id, const
         // Add a tag for identification
         std::string tag = asset_id + "_part_" + std::to_string(i);
         world_->add_component(entity, Tag{tag});
+        
+        // Add mech-specific components for MECH assets
+        if (asset->info.type == AssetType::MECH) {
+            // Add physics components
+            RigidBody rb;
+            rb.mass = 10.0f; // Heavy mech
+            rb.use_gravity = true;
+            rb.is_kinematic = false;
+            world_->add_component(entity, rb);
+            
+            // Add collision for ground interaction
+            Collider collider;
+            collider.type = Collider::Type::Box;
+            collider.size = glm::vec3(1.0f, 2.0f, 1.0f); // Mech-sized collision box
+            world_->add_component(entity, collider);
+            
+            // Add mech movement components (only to the first part - main body)
+            if (i == 0) {
+                // Configure movement based on mech type
+                MechMovement movement;
+                if (asset_id.find("light") != std::string::npos) {
+                    movement.max_speed = 12.0f;
+                    movement.acceleration = 20.0f;
+                    movement.turn_rate = 120.0f;
+                } else if (asset_id.find("medium") != std::string::npos) {
+                    movement.max_speed = 8.0f;
+                    movement.acceleration = 15.0f;
+                    movement.turn_rate = 90.0f;
+                } else if (asset_id.find("heavy") != std::string::npos) {
+                    movement.max_speed = 5.0f;
+                    movement.acceleration = 10.0f;
+                    movement.turn_rate = 60.0f;
+                }
+                world_->add_component(entity, movement);
+                
+                // Add animation component
+                MechAnimation animation;
+                // Configure animation based on mech size
+                if (asset_id.find("heavy") != std::string::npos) {
+                    animation.walk_cycle_speed = 1.5f; // Slower for heavy mechs
+                    animation.step_height = 0.4f;
+                    animation.stride_length = 2.0f;
+                }
+                world_->add_component(entity, animation);
+                
+                // Add pilot component - make the first mech player controlled
+                bool is_player = (player_mech_ == 0); // First mech becomes player mech
+                MechPilot pilot(is_player);
+                if (is_player) {
+                    pilot.movement_sensitivity = 1.2f;
+                    pilot.look_sensitivity = 0.8f;
+                }
+                world_->add_component(entity, pilot);
+                
+                // Set as player mech if this is the first one
+                if (is_player) {
+                    player_mech_ = entity;
+                    if (mech_movement_system_) {
+                        mech_movement_system_->set_player_mech(entity);
+                    }
+                    std::cout << "  Set entity " << entity << " as player mech (" << asset_id << ")" << std::endl;
+                }
+                
+                std::cout << "  Added mech movement components to " << tag << std::endl;
+            }
+        }
         
         // Add to demo entities for cleanup
         demo_entities_.push_back(entity);

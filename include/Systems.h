@@ -120,4 +120,7 @@ private:
                           const glm::vec3& collision_normal, float penetration_depth);
 };
 
+// Forward declaration
+class MechMovementSystem;
+
 } // namespace CorePulse

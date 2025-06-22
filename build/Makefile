@@ -461,6 +461,30 @@ src/MechExtensions.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/MechExtensions.cpp.s
 .PHONY : src/MechExtensions.cpp.s
 
+src/MechMovementSystem.o: src/MechMovementSystem.cpp.o
+.PHONY : src/MechMovementSystem.o
+
+# target to build an object file
+src/MechMovementSystem.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/MechMovementSystem.cpp.o
+.PHONY : src/MechMovementSystem.cpp.o
+
+src/MechMovementSystem.i: src/MechMovementSystem.cpp.i
+.PHONY : src/MechMovementSystem.i
+
+# target to preprocess a source file
+src/MechMovementSystem.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/MechMovementSystem.cpp.i
+.PHONY : src/MechMovementSystem.cpp.i
+
+src/MechMovementSystem.s: src/MechMovementSystem.cpp.s
+.PHONY : src/MechMovementSystem.s
+
+# target to generate assembly for a file
+src/MechMovementSystem.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/corepulse.dir/build.make CMakeFiles/corepulse.dir/src/MechMovementSystem.cpp.s
+.PHONY : src/MechMovementSystem.cpp.s
+
 src/Mesh.o: src/Mesh.cpp.o
 .PHONY : src/Mesh.o
 
@@ -773,6 +797,9 @@ help:
 	@echo "... src/MechExtensions.o"
 	@echo "... src/MechExtensions.i"
 	@echo "... src/MechExtensions.s"
+	@echo "... src/MechMovementSystem.o"
+	@echo "... src/MechMovementSystem.i"
+	@echo "... src/MechMovementSystem.s"
 	@echo "... src/Mesh.o"
 	@echo "... src/Mesh.i"
 	@echo "... src/Mesh.s"

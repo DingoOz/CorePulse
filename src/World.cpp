@@ -91,6 +91,11 @@ void World::register_core_components() {
     
     // Mission components
     register_component<MissionComponent>();
+    
+    // Mech components
+    register_component<MechMovement>();
+    register_component<MechAnimation>();
+    register_component<MechPilot>();
 }
 
 } // namespace CorePulse

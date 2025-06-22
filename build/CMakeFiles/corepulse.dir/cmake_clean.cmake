@@ -21,6 +21,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/corepulse.dir/src/Material.cpp.o.d"
   "CMakeFiles/corepulse.dir/src/MechExtensions.cpp.o"
   "CMakeFiles/corepulse.dir/src/MechExtensions.cpp.o.d"
+  "CMakeFiles/corepulse.dir/src/MechMovementSystem.cpp.o"
+  "CMakeFiles/corepulse.dir/src/MechMovementSystem.cpp.o.d"
   "CMakeFiles/corepulse.dir/src/Mesh.cpp.o"
   "CMakeFiles/corepulse.dir/src/Mesh.cpp.o.d"
   "CMakeFiles/corepulse.dir/src/MissionLoader.cpp.o"

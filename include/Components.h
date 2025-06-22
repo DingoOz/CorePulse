@@ -155,4 +155,89 @@ struct MissionComponent {
         : mission_id(mission), role(entity_role) {}
 };
 
+// Mech movement component - controls mech locomotion
+struct MechMovement {
+    // Movement parameters
+    float max_speed = 8.0f;              // Maximum forward speed (m/s)
+    float acceleration = 15.0f;          // Acceleration rate (m/s²)
+    float deceleration = 20.0f;          // Deceleration rate (m/s²)
+    float turn_rate = 90.0f;             // Maximum turning rate (degrees/second)
+    
+    // Current movement state
+    glm::vec3 desired_velocity{0.0f};    // Input-driven desired movement
+    float current_speed = 0.0f;          // Current forward speed
+    float leg_facing = 0.0f;             // Direction legs are facing (degrees)
+    float torso_rotation = 0.0f;         // Independent torso rotation (degrees)
+    
+    // Movement flags
+    bool is_moving = false;
+    bool is_turning = false;
+    bool can_move = true;                // Can be disabled for damage/stunned states
+    
+    // Torso independence
+    float max_torso_twist = 90.0f;       // Max degrees torso can twist from legs
+    float torso_turn_rate = 120.0f;      // Torso rotation speed (degrees/second)
+    
+    MechMovement() = default;
+    MechMovement(float speed, float accel, float turn_speed) 
+        : max_speed(speed), acceleration(accel), turn_rate(turn_speed) {}
+};
+
+// Mech animation component - handles leg animation and poses
+struct MechAnimation {
+    // Animation state
+    enum class State {
+        Idle,
+        Walking,
+        Turning,
+        Running
+    };
+    
+    State current_state = State::Idle;
+    
+    // Walk cycle parameters
+    float walk_cycle_time = 0.0f;        // Current position in walk cycle (0-1)
+    float walk_cycle_speed = 2.0f;       // Cycles per second when walking
+    float step_height = 0.3f;            // How high legs lift during steps
+    float stride_length = 1.5f;          // Length of each step
+    
+    // Leg positions (relative to mech center)
+    glm::vec3 left_leg_offset{-0.5f, 0.0f, 0.0f};   // Left leg base position
+    glm::vec3 right_leg_offset{0.5f, 0.0f, 0.0f};   // Right leg base position
+    glm::vec3 left_foot_pos{0.0f};      // Current left foot world position
+    glm::vec3 right_foot_pos{0.0f};     // Current right foot world position
+    
+    // Animation blending
+    float blend_speed = 5.0f;            // How fast to blend between states
+    float idle_sway_amount = 0.02f;      // Subtle idle movement
+    float idle_sway_speed = 1.0f;        // Speed of idle sway
+    
+    // Torso and arm animation
+    float torso_bob_amount = 0.1f;       // Vertical bobbing during walk
+    float arm_swing_amount = 10.0f;      // Arm swing angle (degrees)
+    
+    MechAnimation() = default;
+};
+
+// Mech pilot component - handles input and control
+struct MechPilot {
+    // Input state
+    glm::vec2 movement_input{0.0f};      // WASD input (-1 to 1)
+    glm::vec2 look_input{0.0f};          // Mouse look input
+    bool boost_input = false;            // Shift for boost/run
+    bool brake_input = false;            // Ctrl for emergency brake
+    
+    // Control sensitivity
+    float movement_sensitivity = 1.0f;
+    float look_sensitivity = 1.0f;
+    float mouse_smoothing = 0.1f;        // Mouse input smoothing
+    
+    // Player control flags
+    bool player_controlled = false;      // Is this the player's mech?
+    bool input_enabled = true;           // Can receive input
+    
+    MechPilot() = default;
+    explicit MechPilot(bool is_player) : player_controlled(is_player) {}
+};
+
 } // namespace CorePulse

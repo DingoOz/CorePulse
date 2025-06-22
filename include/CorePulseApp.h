@@ -13,6 +13,7 @@
 #include "Terrain.h"
 #include "MissionSystem.h"
 #include "MissionLoader.h"
+#include "MechMovementSystem.h"
 #include <sstream>
 #include <memory>
 
@@ -57,6 +58,7 @@ private:
     std::shared_ptr<PhysicsSystem> physics_system_;
     std::shared_ptr<AudioSystem> audio_system_;
     std::shared_ptr<MissionSystem> mission_system_;
+    std::shared_ptr<MechMovementSystem> mech_movement_system_;
     
     // Audio system
     std::shared_ptr<AudioManager> audio_manager_;
@@ -69,6 +71,7 @@ private:
     // Demo entities
     std::vector<Entity> demo_entities_;
     Entity sphere_entity_ = 0; // Track the falling sphere for reset
+    Entity player_mech_ = 0;   // Track the player-controlled mech
     
     // FlightHelmet glTF resources (multiple meshes/materials)
     std::vector<std::shared_ptr<Mesh>> gltf_meshes_;
