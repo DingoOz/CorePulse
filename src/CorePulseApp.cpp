@@ -59,6 +59,8 @@ bool CorePulseApp::on_initialize() {
     std::cout << "Cube mesh vertex count: " << (cube_mesh_ ? cube_mesh_->get_vertex_count() : 0) << std::endl;
     std::cout << "Cube mesh index count: " << (cube_mesh_ ? cube_mesh_->get_index_count() : 0) << std::endl;
     
+    // Initialize terrain system (will be set up later via setup_terrain())
+    
     // Initialize ECS World
     std::cout << "Initializing ECS World...\n";
     try {
@@ -812,6 +814,7 @@ void CorePulseApp::setup_ecs_systems() {
     
     physics_system_ = std::make_shared<PhysicsSystem>();
     physics_system_->set_world(world_.get());
+    physics_system_->set_terrain(terrain_);
     physics_system_->init();
     
     audio_system_ = std::make_shared<AudioSystem>(audio_manager_);
@@ -838,9 +841,11 @@ void CorePulseApp::create_demo_entities() {
     
     // Create physics demo entities - simple sphere falling onto a plane
     
-    // Red sphere with physics - will fall and bounce on the plane
+    // Terrain entity will be set up by setup_terrain() function
+    
+    // Red sphere with physics - will fall and bounce on the terrain
     sphere_entity_ = world_->create_entity();
-    world_->add_component(sphere_entity_, Transform{glm::vec3(0.0f, 6.0f, 0.0f)});  // Start high above the plane
+    world_->add_component(sphere_entity_, Transform{glm::vec3(-5.0f, 10.0f, -5.0f)});  // Start high above terrain at an offset
     world_->add_component(sphere_entity_, Renderable{sphere_mesh_, glm::vec3(1.0f, 0.3f, 0.3f)});  // Bright red
     world_->add_component(sphere_entity_, RigidBody{glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, 0.1f, 0.1f, false, true});  // No initial velocity
     world_->add_component(sphere_entity_, Collider{Collider::Type::Sphere, glm::vec3(1.0f), glm::vec3(0.0f), false});
@@ -894,7 +899,7 @@ void CorePulseApp::create_demo_entities() {
     if (audio_system_) audio_system_->entities.insert(ambient_entity);
     
     std::cout << "Created " << demo_entities_.size() << " demo entities (including ambient audio)" << std::endl;
-    std::cout << "Watch the red sphere fall and bounce on the blue platform!" << std::endl;
+    std::cout << "Watch the red sphere fall and bounce on the terrain!" << std::endl;
     std::cout << "Listen for velocity-based collision sounds and ambient background audio!" << std::endl;
 }
 
@@ -946,16 +951,71 @@ void CorePulseApp::trigger_sphere_drop() {
         return;
     }
     
-    // Reset sphere position to high above the platform
+    // Reset sphere position to random location high above terrain
     auto& transform = world_->get_component<Transform>(sphere_entity_);
-    transform.position = glm::vec3(0.0f, 8.0f, 0.0f); // Start even higher for dramatic effect
+    
+    // Choose random X,Z position over terrain
+    float random_x = (rand() / static_cast<float>(RAND_MAX) - 0.5f) * 20.0f; // -10 to 10
+    float random_z = (rand() / static_cast<float>(RAND_MAX) - 0.5f) * 20.0f; // -10 to 10
+    
+    // Get terrain height at that position and start well above it
+    float terrain_height = terrain_ ? terrain_->get_height_at(random_x, random_z) : 0.0f;
+    transform.position = glm::vec3(random_x, terrain_height + 12.0f, random_z);
     
     // Reset sphere velocity to zero
     auto& rigidbody = world_->get_component<RigidBody>(sphere_entity_);
     rigidbody.velocity = glm::vec3(0.0f);
     rigidbody.angular_velocity = glm::vec3(0.0f);
     
-    std::cout << "SPHERE DROP TRIGGERED! Watch the red sphere fall!" << std::endl;
+    std::cout << "SPHERE DROP TRIGGERED! Watch the red sphere fall onto the terrain at (" 
+              << random_x << ", " << random_z << ")!" << std::endl;
+}
+
+void CorePulseApp::cycle_terrain_type() {
+    if (!terrain_ || !world_) return;
+    
+    // Cycle through different terrain types
+    static int terrain_type = 0;
+    TerrainConfig new_config;
+    
+    switch (terrain_type % 5) {
+        case 0:
+            new_config = LandscapeGenerator::create_battlefield();
+            std::cout << "Terrain: Switching to Battlefield" << std::endl;
+            break;
+        case 1:
+            new_config = LandscapeGenerator::create_rolling_hills();
+            std::cout << "Terrain: Switching to Rolling Hills" << std::endl;
+            break;
+        case 2:
+            new_config = LandscapeGenerator::create_flat_plains();
+            std::cout << "Terrain: Switching to Flat Plains" << std::endl;
+            break;
+        case 3:
+            new_config = LandscapeGenerator::create_mountainous();
+            std::cout << "Terrain: Switching to Mountainous" << std::endl;
+            break;
+        case 4:
+            new_config = LandscapeGenerator::create_desert_dunes();
+            std::cout << "Terrain: Switching to Desert Dunes" << std::endl;
+            break;
+    }
+    
+    terrain_->regenerate(new_config);
+    
+    // Update the terrain mesh for rendering
+    if (terrain_mesh_) {
+        terrain_mesh_ = terrain_->generate_mesh();
+        
+        // Update the terrain entity's mesh
+        if (world_->is_valid_entity(terrain_entity_)) {
+            auto& renderable = world_->get_component<Renderable>(terrain_entity_);
+            renderable.mesh = terrain_mesh_;
+            renderable.color = new_config.base_color;
+        }
+    }
+    
+    terrain_type++;
 }
 
 void CorePulseApp::test_gltf_loader() {

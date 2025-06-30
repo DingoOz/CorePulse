@@ -118,6 +118,13 @@ struct Ground {
     glm::vec3 normal{0.0f, 1.0f, 0.0f};
 };
 
+// Terrain component - for heightmap-based terrain collision
+struct TerrainCollider {
+    bool enabled = true;
+    float friction = 0.8f;
+    float bounce = 0.3f;
+};
+
 // Audio components
 struct AudioSourceComponent {
     std::string clip_name;

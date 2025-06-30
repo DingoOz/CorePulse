@@ -69,6 +69,7 @@ private:
     // Demo entities
     std::vector<Entity> demo_entities_;
     Entity sphere_entity_ = 0; // Track the falling sphere for reset
+    Entity terrain_entity_ = 0; // Track the terrain entity for regeneration
     
     // FlightHelmet glTF resources (multiple meshes/materials)
     std::vector<std::shared_ptr<Mesh>> gltf_meshes_;
