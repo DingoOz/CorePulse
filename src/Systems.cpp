@@ -167,6 +167,7 @@ void PhysicsSystem::update(float delta_time) {
     
     // Physics system is now working correctly
     
+    
     // Update physics for all entities with RigidBody component
     for (Entity entity : entities) {
         if (!world_->has_component<Transform>(entity) || !world_->has_component<RigidBody>(entity)) {
@@ -514,6 +515,7 @@ void PhysicsSystem::check_terrain_collision(Entity entity, Transform& transform,
     // Get terrain height at object position
     float terrain_height = terrain_->get_height_at(transform.position.x, transform.position.z);
     
+    
     // Check if entity has collider for more accurate collision
     float entity_bottom = transform.position.y;
     if (world_->has_component<Collider>(entity)) {
@@ -539,23 +541,25 @@ void PhysicsSystem::check_terrain_collision(Entity entity, Transform& transform,
         auto material = terrain_->get_material_at(transform.position.x, transform.position.z);
         glm::vec3 terrain_normal = terrain_->get_normal_at(transform.position.x, transform.position.z);
         
-        // Correct position to be on terrain surface
+        // Correct position to be just above terrain surface
         float penetration = terrain_height - entity_bottom;
-        transform.position.y += penetration;
+        if (penetration > 0.0f) {
+            transform.position.y += penetration + 0.001f; // Small separation to prevent sinking
+        }
         
         // Calculate velocity relative to terrain normal
         float velocity_along_normal = glm::dot(rb.velocity, terrain_normal);
         
-        // Only apply collision response if moving into terrain
-        if (velocity_along_normal < 0.0f) {
+        // Only apply collision response if moving into terrain with significant velocity
+        if (velocity_along_normal < -0.1f) {  // Minimum velocity threshold to prevent micro-bouncing
             // Remove velocity component along normal and apply bounce
             glm::vec3 velocity_normal = terrain_normal * velocity_along_normal;
             glm::vec3 velocity_tangent = rb.velocity - velocity_normal;
             
-            // Apply bounce and friction
-            rb.velocity = velocity_tangent * (1.0f - material.friction * 0.1f) + 
-                         velocity_normal * (-material.bounce);
-            
+            // Apply bounce with correct direction (reflect normal component)
+            rb.velocity = velocity_tangent * (1.0f - material.friction * 0.2f) - 
+                         velocity_normal * material.bounce;
+                         
             // Apply drag based on terrain material
             rb.velocity *= (1.0f - material.drag * 0.05f);
             
@@ -569,6 +573,10 @@ void PhysicsSystem::check_terrain_collision(Entity entity, Transform& transform,
                     }
                 }
             }
+        } else if (velocity_along_normal < 0.0f) {
+            // Very small velocity - just stop the downward motion and apply strong friction
+            glm::vec3 velocity_tangent = rb.velocity - terrain_normal * velocity_along_normal;
+            rb.velocity = velocity_tangent * 0.8f;  // Heavy friction to settle the object
         }
         
         // Apply rolling resistance when on terrain

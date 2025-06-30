@@ -8,9 +8,9 @@
 namespace CorePulse {
 
 Terrain::Terrain() {
-    default_material_.friction = 0.8f;
-    default_material_.bounce = 0.3f;
-    default_material_.drag = 0.1f;
+    default_material_.friction = 0.6f;
+    default_material_.bounce = 0.4f;  // Reduced bounce to prevent oscillation
+    default_material_.drag = 0.1f;    // Increased drag to settle bouncing
 }
 
 bool Terrain::initialize(int width, int height, float scale, float height_scale) {
