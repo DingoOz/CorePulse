@@ -63,6 +63,7 @@ private:
     // Demo entities
     std::vector<Entity> demo_entities_;
     Entity sphere_entity_ = 0; // Track the falling sphere for reset
+    Entity terrain_entity_ = 0; // Track the terrain entity for regeneration
     
     // Animation state
     float camera_angle_ = 0.0f;
@@ -80,6 +81,7 @@ private:
     void create_demo_entities();
     void spawn_random_entity();
     void trigger_sphere_drop();
+    void cycle_terrain_type();
 };
 
 } // namespace CorePulse

@@ -98,6 +98,7 @@ bool CorePulseApp::on_initialize() {
     std::cout << "  I   - Toggle Info Display\n";
     std::cout << "  W   - Toggle Wireframe Mode\n";
     std::cout << "  SPACE - Drop sphere (reset physics demo)\n";
+    std::cout << "  L     - Cycle terrain types (5 different landscapes)\n";
     std::cout << "  Mouse wheel - Zoom in/out (radius: 2-20)\n";
     std::cout << "  Arrow keys - Rotate camera around scene\n";
     std::cout << "  A/D - Rotate camera left/right manually\n";
@@ -252,6 +253,11 @@ void CorePulseApp::on_key_pressed(SDL_Scancode key) {
             
         case SDL_SCANCODE_SPACE:
             trigger_sphere_drop();
+            break;
+            
+        case SDL_SCANCODE_L:
+            // Cycle terrain types
+            cycle_terrain_type();
             break;
             
         case SDL_SCANCODE_C:
@@ -479,14 +485,14 @@ void CorePulseApp::create_demo_entities() {
     
     // Add terrain entity for rendering (terrain collision is handled globally)
     if (terrain_mesh_) {
-        Entity terrain_entity = world_->create_entity();
-        world_->add_component(terrain_entity, Transform{glm::vec3(0.0f, 0.0f, 0.0f)});
-        world_->add_component(terrain_entity, Renderable{terrain_mesh_, glm::vec3(0.2f, 0.8f, 0.2f)});  // Green terrain
-        world_->add_component(terrain_entity, Tag{"Terrain"});
-        demo_entities_.push_back(terrain_entity);
+        terrain_entity_ = world_->create_entity();
+        world_->add_component(terrain_entity_, Transform{glm::vec3(0.0f, 0.0f, 0.0f)});
+        world_->add_component(terrain_entity_, Renderable{terrain_mesh_, glm::vec3(0.2f, 0.8f, 0.2f)});  // Green terrain
+        world_->add_component(terrain_entity_, Tag{"Terrain"});
+        demo_entities_.push_back(terrain_entity_);
         
         // Register with render system
-        if (render_system_) render_system_->entities.insert(terrain_entity);
+        if (render_system_) render_system_->entities.insert(terrain_entity_);
         
         std::cout << "Added terrain entity for rendering" << std::endl;
     }
@@ -598,6 +604,53 @@ void CorePulseApp::trigger_sphere_drop() {
     
     std::cout << "SPHERE DROP TRIGGERED! Watch the red sphere fall onto the terrain at (" 
               << random_x << ", " << random_z << ")!" << std::endl;
+}
+
+void CorePulseApp::cycle_terrain_type() {
+    if (!terrain_ || !world_) return;
+    
+    // Cycle through different terrain types
+    static int terrain_type = 0;
+    TerrainConfig new_config;
+    
+    switch (terrain_type % 5) {
+        case 0:
+            new_config = LandscapeGenerator::create_battlefield();
+            std::cout << "Terrain: Switching to Battlefield" << std::endl;
+            break;
+        case 1:
+            new_config = LandscapeGenerator::create_rolling_hills();
+            std::cout << "Terrain: Switching to Rolling Hills" << std::endl;
+            break;
+        case 2:
+            new_config = LandscapeGenerator::create_flat_plains();
+            std::cout << "Terrain: Switching to Flat Plains" << std::endl;
+            break;
+        case 3:
+            new_config = LandscapeGenerator::create_mountainous();
+            std::cout << "Terrain: Switching to Mountainous" << std::endl;
+            break;
+        case 4:
+            new_config = LandscapeGenerator::create_desert_dunes();
+            std::cout << "Terrain: Switching to Desert Dunes" << std::endl;
+            break;
+    }
+    
+    terrain_->regenerate(new_config);
+    
+    // Update the terrain mesh for rendering
+    if (terrain_mesh_) {
+        terrain_mesh_ = terrain_->generate_mesh();
+        
+        // Update the terrain entity's mesh
+        if (world_->is_valid_entity(terrain_entity_)) {
+            auto& renderable = world_->get_component<Renderable>(terrain_entity_);
+            renderable.mesh = terrain_mesh_;
+            renderable.color = new_config.base_color;
+        }
+    }
+    
+    terrain_type++;
 }
 
 } // namespace CorePulse

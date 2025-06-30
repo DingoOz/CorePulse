@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cmath>
 #include <random>
+#include <cstdlib>
 
 namespace CorePulse {
 
@@ -11,6 +12,9 @@ Terrain::Terrain() {
     default_material_.friction = 0.6f;
     default_material_.bounce = 0.4f;  // Reduced bounce to prevent oscillation
     default_material_.drag = 0.1f;    // Increased drag to settle bouncing
+    
+    // Initialize with default config
+    config_ = TerrainConfig{};
 }
 
 bool Terrain::initialize(int width, int height, float scale, float height_scale) {
@@ -264,6 +268,91 @@ float Terrain::fractal_noise(float x, float z, int octaves) const {
     }
     
     return result / max_value; // Normalize
+}
+
+// LandscapeGenerator implementations
+TerrainConfig LandscapeGenerator::create_flat_plains() {
+    TerrainConfig config;
+    config.height_scale = 0.5f;      // Very low height variation
+    config.noise_frequency = 0.02f;  // Large, gentle undulations
+    config.octaves = 2;              // Simple, smooth terrain
+    config.persistence = 0.3f;
+    config.base_color = glm::vec3(0.4f, 0.8f, 0.3f); // Bright green grass
+    return config;
+}
+
+TerrainConfig LandscapeGenerator::create_rolling_hills() {
+    TerrainConfig config;
+    config.height_scale = 2.0f;      // Moderate height variation
+    config.noise_frequency = 0.05f;  // Medium-sized hills
+    config.octaves = 3;              // Some detail
+    config.persistence = 0.5f;
+    config.base_color = glm::vec3(0.3f, 0.7f, 0.2f); // Standard grass green
+    return config;
+}
+
+TerrainConfig LandscapeGenerator::create_mountainous() {
+    TerrainConfig config;
+    config.height_scale = 6.0f;      // High mountains
+    config.noise_frequency = 0.08f;  // Sharp peaks
+    config.octaves = 5;              // Lots of detail
+    config.persistence = 0.7f;       // Strong detail retention
+    config.lacunarity = 2.5f;        // Sharp frequency increases
+    config.base_color = glm::vec3(0.5f, 0.5f, 0.4f); // Rocky gray-brown
+    return config;
+}
+
+TerrainConfig LandscapeGenerator::create_desert_dunes() {
+    TerrainConfig config;
+    config.height_scale = 3.0f;      // Moderate dune height
+    config.noise_frequency = 0.03f;  // Large, flowing dunes
+    config.octaves = 3;              // Smooth formations
+    config.persistence = 0.4f;       // Gentle transitions
+    config.lacunarity = 1.8f;        // Gentle frequency increases
+    config.base_color = glm::vec3(0.9f, 0.8f, 0.6f); // Sandy yellow
+    return config;
+}
+
+TerrainConfig LandscapeGenerator::create_battlefield() {
+    TerrainConfig config;
+    config.height_scale = 1.5f;      // Battle-appropriate terrain
+    config.noise_frequency = 0.1f;   // Tactical cover and obstacles
+    config.octaves = 4;              // Mixed terrain features
+    config.persistence = 0.6f;       
+    config.base_color = glm::vec3(0.4f, 0.4f, 0.3f); // Muddy brown-green
+    return config;
+}
+
+TerrainConfig LandscapeGenerator::create_random() {
+    TerrainConfig config;
+    // Randomize parameters within reasonable ranges
+    config.height_scale = 0.5f + (rand() % 100) * 0.05f;    // 0.5 to 5.5
+    config.noise_frequency = 0.02f + (rand() % 100) * 0.001f; // 0.02 to 0.12
+    config.octaves = 2 + (rand() % 4);                       // 2 to 5
+    config.persistence = 0.3f + (rand() % 100) * 0.005f;    // 0.3 to 0.8
+    
+    // Random color tint
+    float r = 0.2f + (rand() % 100) * 0.007f;  // 0.2 to 0.9
+    float g = 0.3f + (rand() % 100) * 0.005f;  // 0.3 to 0.8
+    float b = 0.1f + (rand() % 100) * 0.003f;  // 0.1 to 0.4
+    config.base_color = glm::vec3(r, g, b);
+    
+    return config;
+}
+
+void Terrain::regenerate(const TerrainConfig& config) {
+    config_ = config;
+    
+    // Update terrain parameters
+    width_ = config.width;
+    height_ = config.depth;
+    scale_ = config.scale;
+    height_scale_ = config.height_scale;
+    
+    // Regenerate heightmap with new parameters
+    generate_heightmap();
+    
+    std::cout << "Terrain: Regenerated with new configuration" << std::endl;
 }
 
 } // namespace CorePulse

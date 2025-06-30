@@ -9,6 +9,29 @@ namespace CorePulse {
 // Forward declarations
 class Mesh;
 
+struct TerrainConfig {
+    // Terrain dimensions
+    int width = 32;            // Number of vertices along X axis
+    int depth = 32;            // Number of vertices along Z axis
+    float scale = 1.0f;        // Size of each terrain quad in world units
+    
+    // Height generation
+    float height_scale = 3.0f; // Maximum height variation
+    float noise_frequency = 0.1f; // Frequency of noise patterns
+    int octaves = 4;           // Number of noise octaves for detail
+    float persistence = 0.5f;  // Amplitude reduction per octave
+    float lacunarity = 2.0f;   // Frequency increase per octave
+    
+    // Terrain features
+    bool generate_normals = true;
+    bool generate_texcoords = true;
+    
+    // Material properties
+    glm::vec3 base_color = glm::vec3(0.3f, 0.7f, 0.2f); // Grass green
+    float roughness = 0.8f;
+    float metallic = 0.0f;
+};
+
 class Terrain {
 public:
     Terrain();
@@ -66,6 +89,28 @@ private:
     // Simple noise function
     float simple_noise(float x, float z, int seed = 42) const;
     float fractal_noise(float x, float z, int octaves = 4) const;
+    
+public:
+    // New config-based methods
+    void regenerate(const TerrainConfig& config);
+    const TerrainConfig& get_config() const { return config_; }
+    
+private:
+    TerrainConfig config_;
+};
+
+// Procedural landscape generator for creating varied terrains
+class LandscapeGenerator {
+public:
+    // Generate different types of landscapes
+    static TerrainConfig create_flat_plains();
+    static TerrainConfig create_rolling_hills();
+    static TerrainConfig create_mountainous();
+    static TerrainConfig create_desert_dunes();
+    static TerrainConfig create_battlefield();
+    
+    // Create a random landscape
+    static TerrainConfig create_random();
 };
 
 } // namespace CorePulse
