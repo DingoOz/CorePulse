@@ -2,7 +2,6 @@
 #include "World.h"
 #include "Mesh.h"
 #include "AudioSystem.h"
-#include "Terrain.h"
 #include <iostream>
 
 namespace CorePulse {
@@ -167,7 +166,6 @@ void PhysicsSystem::update(float delta_time) {
     
     // Physics system is now working correctly
     
-    
     // Update physics for all entities with RigidBody component
     for (Entity entity : entities) {
         if (!world_->has_component<Transform>(entity) || !world_->has_component<RigidBody>(entity)) {
@@ -191,12 +189,8 @@ void PhysicsSystem::update(float delta_time) {
         // Integrate velocity to update position
         integrate_velocity(entity, transform, rb, delta_time);
         
-        // Check terrain collision if terrain is available, otherwise fallback to ground
-        if (terrain_) {
-            check_terrain_collision(entity, transform, rb);
-        } else {
-            check_ground_collision(entity, transform, rb);
-        }
+        // Check ground collision
+        check_ground_collision(entity, transform, rb);
     }
     
     // Check collisions between entities
@@ -311,13 +305,16 @@ void PhysicsSystem::resolve_collision(Entity entity1, Entity entity2) {
         return;
     }
     
+    // Calculate impact velocity for audio effects
+    glm::vec3 impact_velocity = calculate_impact_velocity(entity1, entity2);
+    
     // Trigger collision audio for entities with AudioSourceComponent
     if (audio_system_) {
         if (world_->has_component<AudioSourceComponent>(entity1)) {
-            audio_system_->trigger_collision_audio(entity1);
+            audio_system_->trigger_collision_audio_with_velocity(entity1, impact_velocity);
         }
         if (world_->has_component<AudioSourceComponent>(entity2)) {
-            audio_system_->trigger_collision_audio(entity2);
+            audio_system_->trigger_collision_audio_with_velocity(entity2, impact_velocity);
         }
     }
     
@@ -505,86 +502,25 @@ void PhysicsSystem::separate_objects(Entity entity1, Entity entity2,
     }
 }
 
-void PhysicsSystem::check_terrain_collision(Entity entity, Transform& transform, RigidBody& rb) {
-    if (!terrain_) {
-        // Fallback to simple ground collision
-        check_ground_collision(entity, transform, rb);
-        return;
+glm::vec3 PhysicsSystem::calculate_impact_velocity(Entity entity1, Entity entity2) const {
+    if (!world_->has_component<RigidBody>(entity1) || !world_->has_component<RigidBody>(entity2)) {
+        return glm::vec3(0.0f);
     }
     
-    // Get terrain height at object position
-    float terrain_height = terrain_->get_height_at(transform.position.x, transform.position.z);
+    const auto& rb1 = world_->get_component<RigidBody>(entity1);
+    const auto& rb2 = world_->get_component<RigidBody>(entity2);
     
+    // Calculate relative velocity at impact
+    glm::vec3 relative_velocity = rb1.velocity - rb2.velocity;
     
-    // Check if entity has collider for more accurate collision
-    float entity_bottom = transform.position.y;
-    if (world_->has_component<Collider>(entity)) {
-        const auto& collider = world_->get_component<Collider>(entity);
-        
-        // Approximate bottom of collider
-        switch (collider.type) {
-            case Collider::Type::Sphere:
-                entity_bottom -= collider.size.x; // radius
-                break;
-            case Collider::Type::Box:
-                entity_bottom -= collider.size.y; // half-height
-                break;
-            case Collider::Type::Capsule:
-                entity_bottom -= collider.size.y; // height
-                break;
-        }
+    // For kinematic bodies, use just the dynamic body's velocity
+    if (rb1.is_kinematic && !rb2.is_kinematic) {
+        return rb2.velocity;
+    } else if (rb2.is_kinematic && !rb1.is_kinematic) {
+        return rb1.velocity;
     }
     
-    // Check collision with terrain
-    if (entity_bottom <= terrain_height) {
-        // Get terrain properties
-        auto material = terrain_->get_material_at(transform.position.x, transform.position.z);
-        glm::vec3 terrain_normal = terrain_->get_normal_at(transform.position.x, transform.position.z);
-        
-        // Correct position to be just above terrain surface
-        float penetration = terrain_height - entity_bottom;
-        if (penetration > 0.0f) {
-            transform.position.y += penetration + 0.001f; // Small separation to prevent sinking
-        }
-        
-        // Calculate velocity relative to terrain normal
-        float velocity_along_normal = glm::dot(rb.velocity, terrain_normal);
-        
-        // Only apply collision response if moving into terrain with significant velocity
-        if (velocity_along_normal < -0.1f) {  // Minimum velocity threshold to prevent micro-bouncing
-            // Remove velocity component along normal and apply bounce
-            glm::vec3 velocity_normal = terrain_normal * velocity_along_normal;
-            glm::vec3 velocity_tangent = rb.velocity - velocity_normal;
-            
-            // Apply bounce with correct direction (reflect normal component)
-            rb.velocity = velocity_tangent * (1.0f - material.friction * 0.2f) - 
-                         velocity_normal * material.bounce;
-                         
-            // Apply drag based on terrain material
-            rb.velocity *= (1.0f - material.drag * 0.05f);
-            
-            // Trigger collision audio if available
-            if (audio_system_ && world_->has_component<AudioSourceComponent>(entity)) {
-                float impact_speed = glm::length(velocity_normal);
-                if (impact_speed > 1.0f) { // Only play sound for significant impacts
-                    auto& audio_comp = world_->get_component<AudioSourceComponent>(entity);
-                    if (audio_comp.play_on_collision && !audio_comp.clip_name.empty()) {
-                        // Let audio system handle the collision sound
-                    }
-                }
-            }
-        } else if (velocity_along_normal < 0.0f) {
-            // Very small velocity - just stop the downward motion and apply strong friction
-            glm::vec3 velocity_tangent = rb.velocity - terrain_normal * velocity_along_normal;
-            rb.velocity = velocity_tangent * 0.8f;  // Heavy friction to settle the object
-        }
-        
-        // Apply rolling resistance when on terrain
-        if (glm::length(rb.velocity) > 0.1f) {
-            float resistance = material.friction * 2.0f;
-            rb.velocity *= std::max(0.0f, 1.0f - resistance * 0.016f); // ~60fps approximation
-        }
-    }
+    return relative_velocity;
 }
 
 } // namespace CorePulse

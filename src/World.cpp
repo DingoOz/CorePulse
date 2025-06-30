@@ -87,6 +87,10 @@ void World::register_core_components() {
     
     // Audio components
     register_component<AudioSourceComponent>();
+    register_component<AmbientAudioComponent>();
+    
+    // Mission components
+    register_component<MissionComponent>();
 }
 
 } // namespace CorePulse

@@ -1,358 +1,376 @@
 #include "Terrain.h"
-#include "Mesh.h"
-#include <iostream>
-#include <algorithm>
 #include <cmath>
 #include <random>
-#include <cstdlib>
+#include <algorithm>
+#include <iostream>
 
 namespace CorePulse {
 
-Terrain::Terrain() {
-    default_material_.friction = 0.6f;
-    default_material_.bounce = 0.4f;  // Reduced bounce to prevent oscillation
-    default_material_.drag = 0.1f;    // Increased drag to settle bouncing
-    
-    // Initialize with default config
-    config_ = TerrainConfig{};
+Terrain::Terrain(const TerrainConfig& config) : config_(config) {
+    generate();
 }
 
-bool Terrain::initialize(int width, int height, float scale, float height_scale) {
-    width_ = width;
-    height_ = height;
-    scale_ = scale;
-    height_scale_ = height_scale;
+void Terrain::generate() {
+    std::cout << "Terrain: Generating " << config_.width << "x" << config_.depth 
+              << " terrain with scale " << config_.scale << std::endl;
     
-    // Allocate heightmap
-    heightmap_.resize(width_ * height_);
+    generate_height_map();
+    generate_mesh();
+    generate_material();
     
-    // Generate procedural terrain
-    generate_heightmap();
-    
-    std::cout << "Terrain: Initialized " << width_ << "x" << height_ 
-              << " terrain with scale=" << scale_ << ", height_scale=" << height_scale_ << std::endl;
-    
-    return true;
+    std::cout << "Terrain: Generation complete" << std::endl;
 }
 
-float Terrain::get_height_at(float world_x, float world_z) const {
-    if (!is_in_bounds(world_x, world_z)) {
-        return 0.0f; // Return ground level for out-of-bounds
+void Terrain::regenerate(const TerrainConfig& new_config) {
+    config_ = new_config;
+    generate();
+}
+
+void Terrain::generate_height_map() {
+    // Initialize height map
+    height_map_.clear();
+    height_map_.resize(config_.width, std::vector<float>(config_.depth, 0.0f));
+    
+    // Generate heights using multi-octave noise
+    for (int x = 0; x < config_.width; ++x) {
+        for (int z = 0; z < config_.depth; ++z) {
+            float height = 0.0f;
+            float amplitude = 1.0f;
+            float frequency = config_.noise_frequency;
+            
+            // Sum multiple octaves of noise
+            for (int octave = 0; octave < config_.octaves; ++octave) {
+                float noise_x = x * frequency;
+                float noise_z = z * frequency;
+                
+                float noise_value = generate_noise(noise_x, noise_z);
+                height += noise_value * amplitude;
+                
+                amplitude *= config_.persistence;
+                frequency *= config_.lacunarity;
+            }
+            
+            // Scale and store height
+            height_map_[x][z] = height * config_.height_scale;
+        }
     }
-    
-    // Convert world coordinates to grid coordinates
-    glm::vec2 grid_pos = world_to_grid(world_x, world_z);
-    
-    // Use bilinear interpolation for smooth height
-    return bilinear_interpolate(grid_pos.x, grid_pos.y) * height_scale_;
 }
 
-glm::vec3 Terrain::get_normal_at(float world_x, float world_z) const {
-    const float epsilon = 0.1f; // Small offset for calculating gradient
-    
-    // Sample heights at nearby points
-    float h_center = get_height_at(world_x, world_z);
-    float h_right = get_height_at(world_x + epsilon, world_z);
-    float h_up = get_height_at(world_x, world_z + epsilon);
-    
-    // Calculate tangent vectors
-    glm::vec3 tangent_x(epsilon, h_right - h_center, 0.0f);
-    glm::vec3 tangent_z(0.0f, h_up - h_center, epsilon);
-    
-    // Cross product gives normal
-    glm::vec3 normal = glm::normalize(glm::cross(tangent_x, tangent_z));
-    
-    return normal;
-}
-
-const Terrain::TerrainMaterial& Terrain::get_material_at(float world_x, float world_z) const {
-    // For now, return default material everywhere
-    // In a full implementation, this could vary based on terrain type/texture
-    return default_material_;
-}
-
-std::shared_ptr<Mesh> Terrain::generate_mesh() const {
-    std::vector<Vertex> vertices;
+void Terrain::generate_mesh() {
+    std::vector<float> vertices;
     std::vector<uint32_t> indices;
     
+    // Reserve space for efficiency
+    vertices.reserve(config_.width * config_.depth * 8); // pos(3) + normal(3) + texcoord(2)
+    indices.reserve((config_.width - 1) * (config_.depth - 1) * 6);
+    
     // Generate vertices
-    vertices.reserve(width_ * height_);
-    for (int z = 0; z < height_; ++z) {
-        for (int x = 0; x < width_; ++x) {
-            glm::vec2 world_pos = grid_to_world(x, z);
-            float height = get_height_at_grid(x, z) * height_scale_;
+    for (int z = 0; z < config_.depth; ++z) {
+        for (int x = 0; x < config_.width; ++x) {
+            // World position
+            float world_x = (x - config_.width * 0.5f) * config_.scale;
+            float world_z = (z - config_.depth * 0.5f) * config_.scale;
+            float world_y = height_map_[x][z];
             
-            Vertex vertex;
-            vertex.position = glm::vec3(world_pos.x, height, world_pos.y);
-            vertex.normal = get_normal_at(world_pos.x, world_pos.y);
-            vertex.tex_coords = glm::vec2(
-                static_cast<float>(x) / (width_ - 1),
-                static_cast<float>(z) / (height_ - 1)
-            );
+            // Position
+            vertices.push_back(world_x);
+            vertices.push_back(world_y);
+            vertices.push_back(world_z);
             
-            vertices.push_back(vertex);
+            // Normal
+            if (config_.generate_normals) {
+                glm::vec3 normal = calculate_normal(x, z);
+                vertices.push_back(normal.x);
+                vertices.push_back(normal.y);
+                vertices.push_back(normal.z);
+            } else {
+                vertices.push_back(0.0f);
+                vertices.push_back(1.0f);
+                vertices.push_back(0.0f);
+            }
+            
+            // Texture coordinates
+            if (config_.generate_texcoords) {
+                vertices.push_back(static_cast<float>(x) / (config_.width - 1));
+                vertices.push_back(static_cast<float>(z) / (config_.depth - 1));
+            } else {
+                vertices.push_back(0.0f);
+                vertices.push_back(0.0f);
+            }
         }
     }
     
-    // Generate indices for triangulated terrain
-    indices.reserve((width_ - 1) * (height_ - 1) * 6);
-    for (int z = 0; z < height_ - 1; ++z) {
-        for (int x = 0; x < width_ - 1; ++x) {
-            uint32_t base = z * width_ + x;
+    // Generate indices for triangles
+    for (int z = 0; z < config_.depth - 1; ++z) {
+        for (int x = 0; x < config_.width - 1; ++x) {
+            uint32_t top_left = z * config_.width + x;
+            uint32_t top_right = top_left + 1;
+            uint32_t bottom_left = (z + 1) * config_.width + x;
+            uint32_t bottom_right = bottom_left + 1;
             
-            // First triangle (top-left)
-            indices.push_back(base);
-            indices.push_back(base + width_);
-            indices.push_back(base + 1);
+            // First triangle (top-left, bottom-left, top-right)
+            indices.push_back(top_left);
+            indices.push_back(bottom_left);
+            indices.push_back(top_right);
             
-            // Second triangle (bottom-right)
-            indices.push_back(base + 1);
-            indices.push_back(base + width_);
-            indices.push_back(base + width_ + 1);
+            // Second triangle (top-right, bottom-left, bottom-right)
+            indices.push_back(top_right);
+            indices.push_back(bottom_left);
+            indices.push_back(bottom_right);
         }
     }
     
     // Create mesh
-    auto mesh = std::make_shared<Mesh>();
-    if (!mesh->create(vertices, indices)) {
+    mesh_ = std::make_shared<Mesh>();
+    if (!mesh_->create(vertices, indices)) {
         std::cerr << "Terrain: Failed to create mesh" << std::endl;
-        return nullptr;
+    }
+}
+
+void Terrain::generate_material() {
+    material_ = Material::create_default();
+    material_->name = "Terrain Material";
+    material_->base_color_factor = glm::vec4(config_.base_color, 1.0f);
+    material_->roughness_factor = config_.roughness;
+    material_->metallic_factor = config_.metallic;
+}
+
+float Terrain::get_height_at(float world_x, float world_z) const {
+    // Convert world coordinates to terrain coordinates
+    float terrain_x = (world_x / config_.scale) + (config_.width * 0.5f);
+    float terrain_z = (world_z / config_.scale) + (config_.depth * 0.5f);
+    
+    // Check bounds
+    if (terrain_x < 0 || terrain_x >= config_.width - 1 ||
+        terrain_z < 0 || terrain_z >= config_.depth - 1) {
+        return 0.0f; // Return 0 height for out-of-bounds positions
     }
     
-    return mesh;
-}
-
-bool Terrain::is_in_bounds(float world_x, float world_z) const {
-    glm::vec2 grid_pos = world_to_grid(world_x, world_z);
-    return grid_pos.x >= 0.0f && grid_pos.x < width_ - 1 &&
-           grid_pos.y >= 0.0f && grid_pos.y < height_ - 1;
-}
-
-glm::vec2 Terrain::world_to_grid(float world_x, float world_z) const {
-    return glm::vec2(
-        (world_x / scale_) + (width_ * 0.5f),
-        (world_z / scale_) + (height_ * 0.5f)
-    );
-}
-
-glm::vec2 Terrain::grid_to_world(int grid_x, int grid_z) const {
-    return glm::vec2(
-        (grid_x - width_ * 0.5f) * scale_,
-        (grid_z - height_ * 0.5f) * scale_
-    );
-}
-
-void Terrain::generate_heightmap() {
-    // Fill with base height
-    std::fill(heightmap_.begin(), heightmap_.end(), 0.0f);
-    
-    // Generate hills and valleys
-    generate_hills_and_valleys();
-    
-    // Add noise for detail
-    add_noise(0.1f, 8);  // High frequency detail
-    add_noise(0.3f, 4);  // Medium frequency features
-    add_noise(0.5f, 2);  // Low frequency large features
-}
-
-void Terrain::generate_hills_and_valleys() {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> pos_dist(0.2f, 0.8f);
-    std::uniform_real_distribution<float> height_dist(0.3f, 1.0f);
-    std::uniform_real_distribution<float> radius_dist(0.1f, 0.3f);
-    
-    // Generate several hills
-    int num_features = 6;
-    for (int i = 0; i < num_features; ++i) {
-        float center_x = pos_dist(gen) * width_;
-        float center_z = pos_dist(gen) * height_;
-        float max_height = height_dist(gen);
-        float radius = radius_dist(gen) * std::min(width_, height_);
-        
-        bool is_hill = (i % 2 == 0); // Alternate between hills and valleys
-        if (!is_hill) max_height *= -0.5f; // Make valleys shallower
-        
-        // Apply Gaussian-like falloff
-        for (int z = 0; z < height_; ++z) {
-            for (int x = 0; x < width_; ++x) {
-                float dx = x - center_x;
-                float dz = z - center_z;
-                float distance = std::sqrt(dx * dx + dz * dz);
-                
-                if (distance < radius) {
-                    float factor = std::exp(-(distance * distance) / (radius * radius * 0.3f));
-                    float current_height = get_height_at_grid(x, z);
-                    set_height_at_grid(x, z, current_height + max_height * factor);
-                }
-            }
-        }
-    }
-}
-
-void Terrain::add_noise(float amplitude, int frequency) {
-    for (int z = 0; z < height_; ++z) {
-        for (int x = 0; x < width_; ++x) {
-            float noise_value = fractal_noise(
-                x * frequency / static_cast<float>(width_),
-                z * frequency / static_cast<float>(height_)
-            );
-            
-            float current_height = get_height_at_grid(x, z);
-            set_height_at_grid(x, z, current_height + noise_value * amplitude);
-        }
-    }
-}
-
-float Terrain::get_height_at_grid(int x, int z) const {
-    if (x < 0 || x >= width_ || z < 0 || z >= height_) {
-        return 0.0f;
-    }
-    return heightmap_[z * width_ + x];
-}
-
-void Terrain::set_height_at_grid(int x, int z, float height) {
-    if (x >= 0 && x < width_ && z >= 0 && z < height_) {
-        heightmap_[z * width_ + x] = height;
-    }
-}
-
-float Terrain::bilinear_interpolate(float x, float z) const {
     // Get integer coordinates
-    int x0 = static_cast<int>(std::floor(x));
-    int z0 = static_cast<int>(std::floor(z));
-    int x1 = x0 + 1;
-    int z1 = z0 + 1;
+    int x0 = static_cast<int>(terrain_x);
+    int z0 = static_cast<int>(terrain_z);
+    int x1 = std::min(x0 + 1, config_.width - 1);
+    int z1 = std::min(z0 + 1, config_.depth - 1);
     
-    // Get fractional parts
-    float fx = x - x0;
-    float fz = z - z0;
-    
-    // Sample heightmap at corners
-    float h00 = get_height_at_grid(x0, z0);
-    float h10 = get_height_at_grid(x1, z0);
-    float h01 = get_height_at_grid(x0, z1);
-    float h11 = get_height_at_grid(x1, z1);
+    // Get fractional parts for interpolation
+    float fx = terrain_x - x0;
+    float fz = terrain_z - z0;
     
     // Bilinear interpolation
-    float h_top = h00 * (1.0f - fx) + h10 * fx;
-    float h_bottom = h01 * (1.0f - fx) + h11 * fx;
+    float h00 = height_map_[x0][z0];
+    float h10 = height_map_[x1][z0];
+    float h01 = height_map_[x0][z1];
+    float h11 = height_map_[x1][z1];
     
-    return h_top * (1.0f - fz) + h_bottom * fz;
+    float h_top = interpolate(h00, h10, fx);
+    float h_bottom = interpolate(h01, h11, fx);
+    
+    return interpolate(h_top, h_bottom, fz);
 }
 
-float Terrain::simple_noise(float x, float z, int seed) const {
-    // Simple pseudo-random noise
-    int ix = static_cast<int>(std::floor(x * 1000)) + seed;
-    int iz = static_cast<int>(std::floor(z * 1000)) + seed;
+glm::vec3 Terrain::get_normal_at(float world_x, float world_z) const {
+    // Simple normal calculation using height samples
+    const float offset = config_.scale * 0.1f;
     
-    // Hash the coordinates
-    int hash = (ix * 374761393 + iz * 668265263) ^ seed;
-    hash = (hash << 13) ^ hash;
-    hash = (hash * (hash * hash * 60493 + 19990303) + 1376312589) & 0x7fffffff;
+    float height_left = get_height_at(world_x - offset, world_z);
+    float height_right = get_height_at(world_x + offset, world_z);
+    float height_down = get_height_at(world_x, world_z - offset);
+    float height_up = get_height_at(world_x, world_z + offset);
     
-    return (hash / 1073741824.0f) - 1.0f; // Normalize to [-1, 1]
+    glm::vec3 normal;
+    normal.x = height_left - height_right;
+    normal.y = 2.0f * offset;
+    normal.z = height_down - height_up;
+    
+    return glm::normalize(normal);
 }
 
-float Terrain::fractal_noise(float x, float z, int octaves) const {
-    float result = 0.0f;
-    float amplitude = 1.0f;
-    float frequency = 1.0f;
-    float max_value = 0.0f;
+bool Terrain::is_valid_position(float world_x, float world_z) const {
+    float terrain_x = (world_x / config_.scale) + (config_.width * 0.5f);
+    float terrain_z = (world_z / config_.scale) + (config_.depth * 0.5f);
     
-    for (int i = 0; i < octaves; ++i) {
-        result += simple_noise(x * frequency, z * frequency) * amplitude;
-        max_value += amplitude;
-        amplitude *= 0.5f;
-        frequency *= 2.0f;
-    }
-    
-    return result / max_value; // Normalize
+    return terrain_x >= 0 && terrain_x < config_.width &&
+           terrain_z >= 0 && terrain_z < config_.depth;
 }
 
-// LandscapeGenerator implementations
+glm::vec2 Terrain::get_world_size() const {
+    return glm::vec2(config_.width * config_.scale, config_.depth * config_.scale);
+}
+
+glm::vec3 Terrain::get_world_center() const {
+    return glm::vec3(0.0f, config_.height_scale * 0.5f, 0.0f);
+}
+
+// Noise generation functions
+float Terrain::generate_noise(float x, float z) const {
+    return perlin_noise(x, z);
+}
+
+float Terrain::perlin_noise(float x, float z) const {
+    // Simplified 2D Perlin noise implementation
+    int xi = static_cast<int>(std::floor(x)) & 255;
+    int zi = static_cast<int>(std::floor(z)) & 255;
+    
+    float xf = x - std::floor(x);
+    float zf = z - std::floor(z);
+    
+    float u = fade(xf);
+    float v = fade(zf);
+    
+    // Hash coordinates of the 4 cube corners
+    static const int permutation[] = {
+        151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,
+        8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,
+        35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,
+        134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,
+        55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,
+        18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,
+        250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,
+        189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,
+        172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,
+        228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,
+        107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,
+        138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180
+    };
+    
+    auto hash = [&](int i) -> int {
+        return permutation[i % 256];
+    };
+    
+    int aa = hash(xi) + zi;
+    int ab = hash(xi) + zi + 1;
+    int ba = hash(xi + 1) + zi;
+    int bb = hash(xi + 1) + zi + 1;
+    
+    float grad_aa = gradient(hash(aa), xf, zf);
+    float grad_ba = gradient(hash(ba), xf - 1, zf);
+    float grad_ab = gradient(hash(ab), xf, zf - 1);
+    float grad_bb = gradient(hash(bb), xf - 1, zf - 1);
+    
+    float lerp1 = interpolate(grad_aa, grad_ba, u);
+    float lerp2 = interpolate(grad_ab, grad_bb, u);
+    
+    return interpolate(lerp1, lerp2, v);
+}
+
+float Terrain::interpolate(float a, float b, float t) const {
+    return a + t * (b - a);
+}
+
+float Terrain::fade(float t) const {
+    return t * t * t * (t * (t * 6 - 15) + 10);
+}
+
+float Terrain::gradient(int hash, float x, float z) const {
+    int h = hash & 15;
+    float u = h < 8 ? x : z;
+    float v = h < 4 ? z : (h == 12 || h == 14 ? x : 0);
+    return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
+}
+
+glm::vec3 Terrain::calculate_normal(int x, int z) const {
+    // Calculate normal using neighboring heights
+    float height_left = (x > 0) ? height_map_[x-1][z] : height_map_[x][z];
+    float height_right = (x < config_.width-1) ? height_map_[x+1][z] : height_map_[x][z];
+    float height_down = (z > 0) ? height_map_[x][z-1] : height_map_[x][z];
+    float height_up = (z < config_.depth-1) ? height_map_[x][z+1] : height_map_[x][z];
+    
+    glm::vec3 normal;
+    normal.x = (height_left - height_right) / (2.0f * config_.scale);
+    normal.y = 1.0f;
+    normal.z = (height_down - height_up) / (2.0f * config_.scale);
+    
+    return glm::normalize(normal);
+}
+
+// Landscape Generator implementations
 TerrainConfig LandscapeGenerator::create_flat_plains() {
     TerrainConfig config;
-    config.height_scale = 0.5f;      // Very low height variation
-    config.noise_frequency = 0.02f;  // Large, gentle undulations
-    config.octaves = 2;              // Simple, smooth terrain
-    config.persistence = 0.3f;
-    config.base_color = glm::vec3(0.4f, 0.8f, 0.3f); // Bright green grass
+    config.width = 64;
+    config.depth = 64;
+    config.scale = 4.0f;
+    config.height_scale = 1.0f;
+    config.noise_frequency = 0.02f;
+    config.octaves = 2;
+    config.base_color = glm::vec3(0.4f, 0.8f, 0.3f); // Bright grass green
     return config;
 }
 
 TerrainConfig LandscapeGenerator::create_rolling_hills() {
     TerrainConfig config;
-    config.height_scale = 2.0f;      // Moderate height variation
-    config.noise_frequency = 0.05f;  // Medium-sized hills
-    config.octaves = 3;              // Some detail
-    config.persistence = 0.5f;
-    config.base_color = glm::vec3(0.3f, 0.7f, 0.2f); // Standard grass green
+    config.width = 96;
+    config.depth = 96;
+    config.scale = 3.0f;
+    config.height_scale = 12.0f;
+    config.noise_frequency = 0.05f;
+    config.octaves = 3;
+    config.persistence = 0.6f;
+    config.base_color = glm::vec3(0.3f, 0.7f, 0.2f); // Rolling hills green
     return config;
 }
 
 TerrainConfig LandscapeGenerator::create_mountainous() {
     TerrainConfig config;
-    config.height_scale = 6.0f;      // High mountains
-    config.noise_frequency = 0.08f;  // Sharp peaks
-    config.octaves = 5;              // Lots of detail
-    config.persistence = 0.7f;       // Strong detail retention
-    config.lacunarity = 2.5f;        // Sharp frequency increases
-    config.base_color = glm::vec3(0.5f, 0.5f, 0.4f); // Rocky gray-brown
+    config.width = 128;
+    config.depth = 128;
+    config.scale = 2.0f;
+    config.height_scale = 25.0f;
+    config.noise_frequency = 0.08f;
+    config.octaves = 5;
+    config.persistence = 0.7f;
+    config.lacunarity = 2.2f;
+    config.base_color = glm::vec3(0.5f, 0.5f, 0.4f); // Rocky mountain color
     return config;
 }
 
 TerrainConfig LandscapeGenerator::create_desert_dunes() {
     TerrainConfig config;
-    config.height_scale = 3.0f;      // Moderate dune height
-    config.noise_frequency = 0.03f;  // Large, flowing dunes
-    config.octaves = 3;              // Smooth formations
-    config.persistence = 0.4f;       // Gentle transitions
-    config.lacunarity = 1.8f;        // Gentle frequency increases
-    config.base_color = glm::vec3(0.9f, 0.8f, 0.6f); // Sandy yellow
+    config.width = 80;
+    config.depth = 80;
+    config.scale = 4.0f;
+    config.height_scale = 8.0f;
+    config.noise_frequency = 0.03f;
+    config.octaves = 3;
+    config.persistence = 0.4f;
+    config.base_color = glm::vec3(0.9f, 0.8f, 0.6f); // Desert sand color
     return config;
 }
 
 TerrainConfig LandscapeGenerator::create_battlefield() {
     TerrainConfig config;
-    config.height_scale = 1.5f;      // Battle-appropriate terrain
-    config.noise_frequency = 0.1f;   // Tactical cover and obstacles
-    config.octaves = 4;              // Mixed terrain features
-    config.persistence = 0.6f;       
-    config.base_color = glm::vec3(0.4f, 0.4f, 0.3f); // Muddy brown-green
+    config.width = 32;
+    config.depth = 32;
+    config.scale = 2.0f;
+    config.height_scale = 4.0f;
+    config.noise_frequency = 0.1f;
+    config.octaves = 3;
+    config.persistence = 0.5f;
+    config.base_color = glm::vec3(0.25f, 0.5f, 0.2f); // Darker battlefield green
+    config.roughness = 0.9f;
     return config;
 }
 
 TerrainConfig LandscapeGenerator::create_random() {
-    TerrainConfig config;
-    // Randomize parameters within reasonable ranges
-    config.height_scale = 0.5f + (rand() % 100) * 0.05f;    // 0.5 to 5.5
-    config.noise_frequency = 0.02f + (rand() % 100) * 0.001f; // 0.02 to 0.12
-    config.octaves = 2 + (rand() % 4);                       // 2 to 5
-    config.persistence = 0.3f + (rand() % 100) * 0.005f;    // 0.3 to 0.8
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
     
-    // Random color tint
-    float r = 0.2f + (rand() % 100) * 0.007f;  // 0.2 to 0.9
-    float g = 0.3f + (rand() % 100) * 0.005f;  // 0.3 to 0.8
-    float b = 0.1f + (rand() % 100) * 0.003f;  // 0.1 to 0.4
-    config.base_color = glm::vec3(r, g, b);
+    std::uniform_int_distribution<> size_dist(64, 128);
+    std::uniform_real_distribution<> scale_dist(1.5f, 4.0f);
+    std::uniform_real_distribution<> height_dist(5.0f, 20.0f);
+    std::uniform_real_distribution<> freq_dist(0.02f, 0.1f);
+    std::uniform_int_distribution<> octave_dist(2, 5);
+    std::uniform_real_distribution<> color_dist(0.2f, 0.8f);
+    
+    TerrainConfig config;
+    config.width = size_dist(gen);
+    config.depth = size_dist(gen);
+    config.scale = scale_dist(gen);
+    config.height_scale = height_dist(gen);
+    config.noise_frequency = freq_dist(gen);
+    config.octaves = octave_dist(gen);
+    config.base_color = glm::vec3(color_dist(gen), color_dist(gen), color_dist(gen));
     
     return config;
-}
-
-void Terrain::regenerate(const TerrainConfig& config) {
-    config_ = config;
-    
-    // Update terrain parameters
-    width_ = config.width;
-    height_ = config.depth;
-    scale_ = config.scale;
-    height_scale_ = config.height_scale;
-    
-    // Regenerate heightmap with new parameters
-    generate_heightmap();
-    
-    std::cout << "Terrain: Regenerated with new configuration" << std::endl;
 }
 
 } // namespace CorePulse

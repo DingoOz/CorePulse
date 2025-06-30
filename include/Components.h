@@ -4,6 +4,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <memory>
 #include <string>
+#include <unordered_map>
+#include <vector>
 
 namespace CorePulse {
 
@@ -134,6 +136,30 @@ struct AudioSourceComponent {
     bool play_on_start = false;
     bool play_on_collision = false;
     uint32_t audio_source_id = 0; // Internal audio system ID
+};
+
+// Ambient audio component for environmental sounds
+struct AmbientAudioComponent {
+    std::string clip_name;
+    float volume = 0.3f;
+    float fade_distance = 50.0f;  // Distance at which ambient sound starts fading
+    float max_distance = 100.0f;  // Maximum distance for ambient sound
+    bool is_playing = false;
+    bool auto_start = true;       // Start playing automatically
+    uint32_t audio_source_id = 0; // Internal audio system ID
+};
+
+// Mission component - marks entities as part of missions
+struct MissionComponent {
+    std::string mission_id;
+    std::string role;                      // "target", "ally", "enemy", "objective"
+    std::vector<std::string> objective_ids; // Which objectives this entity is part of
+    bool is_essential = false;             // Mission fails if this entity is destroyed
+    std::unordered_map<std::string, std::string> properties;
+    
+    MissionComponent() = default;
+    MissionComponent(const std::string& mission, const std::string& entity_role)
+        : mission_id(mission), role(entity_role) {}
 };
 
 } // namespace CorePulse

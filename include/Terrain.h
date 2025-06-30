@@ -3,20 +3,19 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include <memory>
+#include "Mesh.h"
+#include "Material.h"
 
 namespace CorePulse {
 
-// Forward declarations
-class Mesh;
-
 struct TerrainConfig {
     // Terrain dimensions
-    int width = 32;            // Number of vertices along X axis
-    int depth = 32;            // Number of vertices along Z axis
-    float scale = 1.0f;        // Size of each terrain quad in world units
+    int width = 128;           // Number of vertices along X axis
+    int depth = 128;           // Number of vertices along Z axis
+    float scale = 2.0f;        // Size of each terrain quad in world units
     
     // Height generation
-    float height_scale = 3.0f; // Maximum height variation
+    float height_scale = 8.0f; // Maximum height variation
     float noise_frequency = 0.1f; // Frequency of noise patterns
     int octaves = 4;           // Number of noise octaves for detail
     float persistence = 0.5f;  // Amplitude reduction per octave
@@ -34,69 +33,51 @@ struct TerrainConfig {
 
 class Terrain {
 public:
-    Terrain();
+    explicit Terrain(const TerrainConfig& config = TerrainConfig{});
     ~Terrain() = default;
     
-    // Initialize with procedural generation
-    bool initialize(int width, int height, float scale = 1.0f, float height_scale = 5.0f);
+    // Terrain generation
+    void generate();
+    void regenerate(const TerrainConfig& new_config);
     
-    // Heightmap-based collision detection
+    // Accessors
+    std::shared_ptr<Mesh> get_mesh() const { return mesh_; }
+    std::shared_ptr<Material> get_material() const { return material_; }
+    const TerrainConfig& get_config() const { return config_; }
+    
+    // Terrain queries
     float get_height_at(float world_x, float world_z) const;
     glm::vec3 get_normal_at(float world_x, float world_z) const;
+    bool is_valid_position(float world_x, float world_z) const;
     
-    // Terrain properties
-    struct TerrainMaterial {
-        float friction = 0.8f;
-        float bounce = 0.3f;
-        float drag = 0.1f;
-    };
-    
-    const TerrainMaterial& get_material_at(float world_x, float world_z) const;
-    
-    // Mesh generation for rendering
-    std::shared_ptr<Mesh> generate_mesh() const;
-    
-    // Getters
-    int get_width() const { return width_; }
-    int get_height() const { return height_; }
-    float get_scale() const { return scale_; }
-    float get_height_scale() const { return height_scale_; }
-    
-    // Bounds checking
-    bool is_in_bounds(float world_x, float world_z) const;
-    glm::vec2 world_to_grid(float world_x, float world_z) const;
-    glm::vec2 grid_to_world(int grid_x, int grid_z) const;
-
-private:
-    int width_ = 0;
-    int height_ = 0;
-    float scale_ = 1.0f;
-    float height_scale_ = 5.0f;
-    
-    std::vector<float> heightmap_;
-    TerrainMaterial default_material_;
-    
-    // Heightmap generation
-    void generate_heightmap();
-    void generate_hills_and_valleys();
-    void add_noise(float amplitude, int frequency);
-    
-    // Utility functions
-    float get_height_at_grid(int x, int z) const;
-    void set_height_at_grid(int x, int z, float height);
-    float bilinear_interpolate(float x, float z) const;
-    
-    // Simple noise function
-    float simple_noise(float x, float z, int seed = 42) const;
-    float fractal_noise(float x, float z, int octaves = 4) const;
-    
-public:
-    // New config-based methods
-    void regenerate(const TerrainConfig& config);
-    const TerrainConfig& get_config() const { return config_; }
+    // Terrain bounds
+    glm::vec2 get_world_size() const;
+    glm::vec3 get_world_center() const;
     
 private:
     TerrainConfig config_;
+    std::shared_ptr<Mesh> mesh_;
+    std::shared_ptr<Material> material_;
+    
+    // Height data for queries
+    std::vector<std::vector<float>> height_map_;
+    
+    // Generation helpers
+    void generate_height_map();
+    void generate_mesh();
+    void generate_material();
+    
+    // Noise functions
+    float generate_noise(float x, float z) const;
+    float perlin_noise(float x, float z) const;
+    float interpolate(float a, float b, float t) const;
+    float fade(float t) const;
+    float gradient(int hash, float x, float z) const;
+    
+    // Mesh generation helpers
+    glm::vec3 calculate_normal(int x, int z) const;
+    void add_quad(std::vector<float>& vertices, std::vector<unsigned int>& indices,
+                  int x, int z, unsigned int& index_offset) const;
 };
 
 // Procedural landscape generator for creating varied terrains

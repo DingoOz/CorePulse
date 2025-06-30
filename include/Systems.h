@@ -107,6 +107,7 @@ private:
     void check_terrain_collision(Entity entity, Transform& transform, RigidBody& rb);
     bool check_collision(Entity entity1, Entity entity2);
     void resolve_collision(Entity entity1, Entity entity2);
+    glm::vec3 calculate_impact_velocity(Entity entity1, Entity entity2) const;
     
     // Specific collision detection methods
     bool check_sphere_sphere_collision(const glm::vec3& pos1, float radius1, 

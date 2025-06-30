@@ -123,6 +123,12 @@ uint32_t AudioManager::play_sound(const std::string& clip_name, float volume, bo
 
 uint32_t AudioManager::play_sound_3d(const std::string& clip_name, const glm::vec3& position, 
                                      float volume, bool loop) {
+    return play_sound_3d_velocity(clip_name, position, glm::vec3(0.0f), volume, 0.0f, loop);
+}
+
+uint32_t AudioManager::play_sound_3d_velocity(const std::string& clip_name, const glm::vec3& position,
+                                             const glm::vec3& velocity, float volume, 
+                                             float pitch_variation, bool loop) {
     if (!initialized_) {
         std::cerr << "AudioManager: Not initialized" << std::endl;
         return 0;
@@ -138,10 +144,14 @@ uint32_t AudioManager::play_sound_3d(const std::string& clip_name, const glm::ve
     
     AudioSource source;
     source.position = position;
+    source.velocity = velocity;
     source.volume = std::clamp(volume, 0.0f, 1.0f);
-    source.is_3d = (position != glm::vec3(0.0f)); // If position is zero, treat as 2D
+    source.base_pitch = 1.0f + pitch_variation;
+    source.pitch = source.base_pitch;
+    source.is_3d = true;
     source.is_looping = loop;
     source.is_playing = true;
+    source.use_doppler = audio_config_.enable_doppler && (glm::length(velocity) > 0.1f);
     source.clip_name = clip_name;
     source.play_position = 0;
     
@@ -149,7 +159,8 @@ uint32_t AudioManager::play_sound_3d(const std::string& clip_name, const glm::ve
     audio_sources_[source_id] = source;
     SDL_UnlockAudioDevice(audio_device_);
     
-    std::cout << "AudioManager: Playing sound '" << clip_name << "' (ID: " << source_id << ")" << std::endl;
+    std::cout << "AudioManager: Playing 3D sound '" << clip_name << "' (ID: " << source_id 
+              << ", velocity: " << glm::length(velocity) << ")" << std::endl;
     return source_id;
 }
 
@@ -172,8 +183,30 @@ void AudioManager::stop_all_sounds() {
     std::cout << "AudioManager: Stopped all sounds" << std::endl;
 }
 
+void AudioManager::pause_sound(uint32_t source_id) {
+    SDL_LockAudioDevice(audio_device_);
+    auto it = audio_sources_.find(source_id);
+    if (it != audio_sources_.end()) {
+        it->second.is_playing = false;
+    }
+    SDL_UnlockAudioDevice(audio_device_);
+}
+
+void AudioManager::resume_sound(uint32_t source_id) {
+    SDL_LockAudioDevice(audio_device_);
+    auto it = audio_sources_.find(source_id);
+    if (it != audio_sources_.end()) {
+        it->second.is_playing = true;
+    }
+    SDL_UnlockAudioDevice(audio_device_);
+}
+
 void AudioManager::set_listener_position(const glm::vec3& position) {
     listener_.position = position;
+}
+
+void AudioManager::set_listener_velocity(const glm::vec3& velocity) {
+    listener_.velocity = velocity;
 }
 
 void AudioManager::set_listener_orientation(const glm::vec3& forward, const glm::vec3& up) {
@@ -183,6 +216,38 @@ void AudioManager::set_listener_orientation(const glm::vec3& forward, const glm:
 
 void AudioManager::set_master_volume(float volume) {
     listener_.master_volume = std::clamp(volume, 0.0f, 1.0f);
+}
+
+void AudioManager::set_audio_config(const AudioConfig& config) {
+    audio_config_ = config;
+}
+
+void AudioManager::update_source_position(uint32_t source_id, const glm::vec3& position) {
+    SDL_LockAudioDevice(audio_device_);
+    auto it = audio_sources_.find(source_id);
+    if (it != audio_sources_.end()) {
+        it->second.position = position;
+    }
+    SDL_UnlockAudioDevice(audio_device_);
+}
+
+void AudioManager::update_source_velocity(uint32_t source_id, const glm::vec3& velocity) {
+    SDL_LockAudioDevice(audio_device_);
+    auto it = audio_sources_.find(source_id);
+    if (it != audio_sources_.end()) {
+        it->second.velocity = velocity;
+        it->second.use_doppler = audio_config_.enable_doppler && (glm::length(velocity) > 0.1f);
+    }
+    SDL_UnlockAudioDevice(audio_device_);
+}
+
+void AudioManager::update_source_volume(uint32_t source_id, float volume) {
+    SDL_LockAudioDevice(audio_device_);
+    auto it = audio_sources_.find(source_id);
+    if (it != audio_sources_.end()) {
+        it->second.volume = std::clamp(volume, 0.0f, 1.0f);
+    }
+    SDL_UnlockAudioDevice(audio_device_);
 }
 
 void AudioManager::update() {
@@ -220,27 +285,57 @@ void AudioManager::mix_audio(uint8_t* stream, int len) {
         
         // Calculate 3D audio parameters
         float volume = source.volume * listener_.master_volume;
+        float pitch = source.pitch;
+        
         if (source.is_3d) {
+            // Distance attenuation
             volume *= calculate_3d_volume(source);
+            
+            // Doppler effect
+            if (source.use_doppler && audio_config_.enable_doppler) {
+                pitch *= calculate_doppler_pitch(source);
+            }
+            
+            // Audio occlusion (simple distance-based filtering)
+            if (audio_config_.enable_occlusion) {
+                volume *= calculate_occlusion_factor(source);
+            }
         }
         
         // Convert volume to integer (0-128 for SDL)
         int vol = static_cast<int>(volume * 128.0f);
         if (vol <= 0) continue;
         
-        // Mix the audio data
+        // Mix the audio data with pitch adjustment
         int16_t* clip_data = reinterpret_cast<int16_t*>(clip->buffer.data());
         uint32_t clip_samples = clip->length / sizeof(int16_t);
         
+        // Calculate pitch step (how fast to advance through the source)
+        float pitch_step = std::clamp(pitch, 0.5f, 2.0f); // Limit pitch range
+        
         for (int i = 0; i < samples && source.play_position < clip_samples; i += 2) {
-            // Get stereo sample from source
-            int16_t left = clip_data[source.play_position];
-            int16_t right = (audio_spec_.channels > 1 && source.play_position + 1 < clip_samples) 
-                           ? clip_data[source.play_position + 1] : left;
+            // Get stereo sample from source with interpolation for pitch shifting
+            uint32_t sample_pos = static_cast<uint32_t>(source.play_position);
             
-            // Apply volume
+            int16_t left = 0, right = 0;
+            if (sample_pos < clip_samples) {
+                left = clip_data[sample_pos];
+                right = (audio_spec_.channels > 1 && sample_pos + 1 < clip_samples) 
+                       ? clip_data[sample_pos + 1] : left;
+            }
+            
+            // Apply volume and pan
             left = static_cast<int16_t>((left * vol) / 128);
             right = static_cast<int16_t>((right * vol) / 128);
+            
+            // Apply 3D panning
+            if (source.is_3d) {
+                float pan = calculate_3d_pan(source);
+                float left_gain = 1.0f - std::max(0.0f, pan);
+                float right_gain = 1.0f + std::min(0.0f, pan);
+                left = static_cast<int16_t>(left * left_gain);
+                right = static_cast<int16_t>(right * right_gain);
+            }
             
             // Mix with existing audio
             int32_t mixed_left = output[i] + left;
@@ -250,7 +345,8 @@ void AudioManager::mix_audio(uint8_t* stream, int len) {
             output[i] = static_cast<int16_t>(std::clamp(mixed_left, -32768, 32767));
             output[i + 1] = static_cast<int16_t>(std::clamp(mixed_right, -32768, 32767));
             
-            source.play_position += 2;
+            // Advance source position with pitch adjustment
+            source.play_position += static_cast<uint32_t>(2 * pitch_step);
         }
         
         // Check if finished playing
@@ -272,18 +368,95 @@ float AudioManager::calculate_3d_volume(const AudioSource& source) const {
         return 0.0f;
     }
     
-    // Simple linear falloff
-    float attenuation = 1.0f - (distance / source.max_distance);
-    return std::max(0.0f, attenuation);
+    if (distance <= source.min_distance) {
+        return 1.0f;
+    }
+    
+    // Logarithmic falloff with configurable rolloff factor
+    float distance_ratio = (distance - source.min_distance) / (source.max_distance - source.min_distance);
+    float attenuation = 1.0f / (1.0f + source.rolloff_factor * distance_ratio * distance_ratio);
+    
+    // Apply global distance model factor
+    attenuation *= audio_config_.distance_model_factor;
+    
+    return std::clamp(attenuation, 0.0f, 1.0f);
 }
 
 float AudioManager::calculate_3d_pan(const AudioSource& source) const {
-    glm::vec3 to_source = glm::normalize(source.position - listener_.position);
+    glm::vec3 to_source = source.position - listener_.position;
+    float distance = glm::length(to_source);
+    
+    if (distance < 0.001f) {
+        return 0.0f; // Centered if source is at listener position
+    }
+    
+    to_source = glm::normalize(to_source);
     glm::vec3 right = glm::cross(listener_.forward, listener_.up);
     
     // Calculate how much to the right the source is (-1 = left, 1 = right)
     float pan = glm::dot(to_source, right);
+    
+    // Reduce panning for distant sources (they should sound more centered)
+    float distance_factor = std::min(1.0f, distance / source.max_distance);
+    pan *= (1.0f - distance_factor * 0.5f);
+    
     return std::clamp(pan, -1.0f, 1.0f);
+}
+
+float AudioManager::calculate_doppler_pitch(const AudioSource& source) const {
+    if (!audio_config_.enable_doppler) {
+        return 1.0f;
+    }
+    
+    glm::vec3 to_source = source.position - listener_.position;
+    float distance = glm::length(to_source);
+    
+    if (distance < 0.001f) {
+        return 1.0f;
+    }
+    
+    glm::vec3 direction = to_source / distance;
+    
+    // Calculate relative velocity along the line between listener and source
+    float source_velocity = glm::dot(source.velocity, direction);
+    float listener_velocity = glm::dot(listener_.velocity, direction);
+    float relative_velocity = source_velocity - listener_velocity;
+    
+    // Doppler shift formula: f' = f * (v + vr) / (v + vs)
+    // where v = speed of sound, vr = receiver velocity, vs = source velocity
+    float doppler_factor = (audio_config_.speed_of_sound - listener_velocity) / 
+                          (audio_config_.speed_of_sound - source_velocity);
+    
+    // Apply doppler intensity factor and clamp to reasonable range
+    doppler_factor = 1.0f + (doppler_factor - 1.0f) * audio_config_.doppler_factor;
+    return std::clamp(doppler_factor, 0.5f, 2.0f);
+}
+
+float AudioManager::calculate_distance_filter(const AudioSource& source) const {
+    float distance = glm::length(source.position - listener_.position);
+    
+    if (distance <= source.min_distance) {
+        return 1.0f; // No filtering at close distance
+    }
+    
+    // Simple low-pass effect based on distance
+    float filter_factor = source.min_distance / distance;
+    return std::clamp(filter_factor, 0.1f, 1.0f);
+}
+
+float AudioManager::calculate_occlusion_factor(const AudioSource& source) const {
+    float distance = glm::length(source.position - listener_.position);
+    
+    // Simple occlusion based on distance (more sophisticated methods would use raycasting)
+    float occlusion = 1.0f;
+    
+    // Simulate simple air absorption
+    if (distance > source.min_distance) {
+        float air_absorption = 1.0f - (distance - source.min_distance) / (source.max_distance * 2.0f);
+        occlusion *= std::max(0.2f, air_absorption);
+    }
+    
+    return occlusion;
 }
 
 bool AudioManager::load_wav_file(const std::string& filename, AudioClip& clip) {
