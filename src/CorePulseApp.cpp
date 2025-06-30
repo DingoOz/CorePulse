@@ -56,6 +56,21 @@ bool CorePulseApp::on_initialize() {
     std::cout << "Cube mesh vertex count: " << (cube_mesh_ ? cube_mesh_->get_vertex_count() : 0) << std::endl;
     std::cout << "Cube mesh index count: " << (cube_mesh_ ? cube_mesh_->get_index_count() : 0) << std::endl;
     
+    // Initialize terrain system
+    std::cout << "Initializing terrain system...\n";
+    terrain_ = std::make_shared<Terrain>();
+    if (terrain_->initialize(32, 32, 1.0f, 3.0f)) {
+        terrain_mesh_ = terrain_->generate_mesh();
+        if (terrain_mesh_) {
+            std::cout << "Terrain: Generated mesh with " << terrain_mesh_->get_vertex_count() 
+                      << " vertices and " << terrain_mesh_->get_index_count() << " indices\n";
+        } else {
+            std::cerr << "Failed to generate terrain mesh\n";
+        }
+    } else {
+        std::cerr << "Failed to initialize terrain\n";
+    }
+    
     // Initialize ECS World
     std::cout << "Initializing ECS World...\n";
     try {
@@ -446,6 +461,7 @@ void CorePulseApp::setup_ecs_systems() {
     
     physics_system_ = std::make_shared<PhysicsSystem>();
     physics_system_->set_world(world_.get());
+    physics_system_->set_terrain(terrain_);
     physics_system_->init();
     
     audio_system_ = std::make_shared<AudioSystem>(audio_manager_);
@@ -461,9 +477,23 @@ void CorePulseApp::create_demo_entities() {
     
     // Create physics demo entities - simple sphere falling onto a plane
     
-    // Red sphere with physics - will fall and bounce on the plane
+    // Add terrain entity for rendering (terrain collision is handled globally)
+    if (terrain_mesh_) {
+        Entity terrain_entity = world_->create_entity();
+        world_->add_component(terrain_entity, Transform{glm::vec3(0.0f, 0.0f, 0.0f)});
+        world_->add_component(terrain_entity, Renderable{terrain_mesh_, glm::vec3(0.2f, 0.8f, 0.2f)});  // Green terrain
+        world_->add_component(terrain_entity, Tag{"Terrain"});
+        demo_entities_.push_back(terrain_entity);
+        
+        // Register with render system
+        if (render_system_) render_system_->entities.insert(terrain_entity);
+        
+        std::cout << "Added terrain entity for rendering" << std::endl;
+    }
+    
+    // Red sphere with physics - will fall and bounce on the terrain
     sphere_entity_ = world_->create_entity();
-    world_->add_component(sphere_entity_, Transform{glm::vec3(0.0f, 6.0f, 0.0f)});  // Start high above the plane
+    world_->add_component(sphere_entity_, Transform{glm::vec3(-5.0f, 10.0f, -5.0f)});  // Start high above terrain at an offset
     world_->add_component(sphere_entity_, Renderable{sphere_mesh_, glm::vec3(1.0f, 0.3f, 0.3f)});  // Bright red
     world_->add_component(sphere_entity_, RigidBody{glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, 0.1f, 0.1f, false, true});  // No initial velocity
     world_->add_component(sphere_entity_, Collider{Collider::Type::Sphere, glm::vec3(1.0f), glm::vec3(0.0f), false});
@@ -499,7 +529,7 @@ void CorePulseApp::create_demo_entities() {
     if (physics_system_) physics_system_->entities.insert(plane_entity);
     
     std::cout << "Created " << demo_entities_.size() << " physics demo entities" << std::endl;
-    std::cout << "Watch the red sphere fall and bounce on the blue platform!" << std::endl;
+    std::cout << "Watch the red sphere fall and bounce on the procedural terrain!" << std::endl;
 }
 
 void CorePulseApp::spawn_random_entity() {
@@ -550,16 +580,24 @@ void CorePulseApp::trigger_sphere_drop() {
         return;
     }
     
-    // Reset sphere position to high above the platform
+    // Reset sphere position to random location high above terrain
     auto& transform = world_->get_component<Transform>(sphere_entity_);
-    transform.position = glm::vec3(0.0f, 8.0f, 0.0f); // Start even higher for dramatic effect
+    
+    // Choose random X,Z position over terrain
+    float random_x = (rand() / static_cast<float>(RAND_MAX) - 0.5f) * 20.0f; // -10 to 10
+    float random_z = (rand() / static_cast<float>(RAND_MAX) - 0.5f) * 20.0f; // -10 to 10
+    
+    // Get terrain height at that position and start well above it
+    float terrain_height = terrain_ ? terrain_->get_height_at(random_x, random_z) : 0.0f;
+    transform.position = glm::vec3(random_x, terrain_height + 12.0f, random_z);
     
     // Reset sphere velocity to zero
     auto& rigidbody = world_->get_component<RigidBody>(sphere_entity_);
     rigidbody.velocity = glm::vec3(0.0f);
     rigidbody.angular_velocity = glm::vec3(0.0f);
     
-    std::cout << "SPHERE DROP TRIGGERED! Watch the red sphere fall!" << std::endl;
+    std::cout << "SPHERE DROP TRIGGERED! Watch the red sphere fall onto the terrain at (" 
+              << random_x << ", " << random_z << ")!" << std::endl;
 }
 
 } // namespace CorePulse

@@ -8,6 +8,7 @@
 #include "Systems.h"
 #include "AudioManager.h"
 #include "AudioSystem.h"
+#include "Terrain.h"
 #include <sstream>
 #include <memory>
 
@@ -54,6 +55,10 @@ private:
     std::shared_ptr<Mesh> cube_mesh_;
     std::shared_ptr<Mesh> sphere_mesh_;
     std::shared_ptr<Mesh> plane_mesh_;
+    
+    // Terrain system
+    std::shared_ptr<Terrain> terrain_;
+    std::shared_ptr<Mesh> terrain_mesh_;
     
     // Demo entities
     std::vector<Entity> demo_entities_;
